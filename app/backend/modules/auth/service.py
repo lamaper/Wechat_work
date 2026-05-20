@@ -10,7 +10,7 @@ from modules.shared.paths import BACKEND_ROOT
 
 try:
     import bit_login
-except Exception:
+except ImportError:
     bit_login = None
 
 

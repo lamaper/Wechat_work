@@ -1,0 +1,31 @@
+﻿query= 北京理工大学 报到当天需要准备哪些材料？
+candidate_count= 5
+--- candidate 1 ---
+url= https://grd.bit.edu.cn/pygz/jwyx/tzgg_jwyx/22e18e88161944519172832cd1062676.htm
+elapsed=0.21s ok=True error=None
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2581 字符
+--- candidate 2 ---
+url= https://www.bit.edu.cn/yxw/rxbd/bdxz/f4db2198945349dba7c7f0a20bcdd188.htm
+elapsed=5.01s ok=False error=robots.txt 不允许抓取该网址
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+--- candidate 3 ---
+url= https://www.douyin.com/search/大学开学报到当天需要准备哪些材料
+elapsed=5.01s ok=False error=robots.txt 不允许抓取该网址
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+--- candidate 4 ---
+url= https://www.applysquare.com/topic-cn/2PBrYsG1fPe/
+elapsed=5.17s ok=True error=None
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html; charset=utf-8
+step=extract ok=True msg=提取正文成功，长度 442 字符
+--- candidate 5 ---
+url= https://zhuanlan.zhihu.com/p/546857078
+elapsed=0.72s ok=False error=robots.txt 不允许抓取该网址
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取

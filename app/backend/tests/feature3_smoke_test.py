@@ -1,6 +1,14 @@
+import os
 import sys
+import tempfile
 import time
 from pathlib import Path
+
+
+TEST_TEMP_DIR = tempfile.TemporaryDirectory(prefix="feature3-smoke-")
+os.environ["DB_PATH"] = str(Path(TEST_TEMP_DIR.name) / "feature3.db")
+os.environ["FEATURE3_ENABLE_WORKER"] = "0"
+os.environ["FEATURE3_AUTO_AI_ANSWER"] = "0"
 
 
 BACKEND_ROOT = Path(__file__).resolve().parents[1]

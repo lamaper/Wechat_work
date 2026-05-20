@@ -19,6 +19,8 @@ def _public_path(path: str) -> bool:
         return True
     if path.startswith("/favicon"):
         return True
+    if path.endswith((".css", ".js", ".svg", ".png", ".jpg", ".ico", ".woff2")):
+        return True
     return False
 
 

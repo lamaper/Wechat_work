@@ -4,197 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>学长处理台 - 人工工单</title>
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --ink: #12263d;
-      --muted: #60738a;
-      --line: #d9e2ee;
-      --card: #fff;
-      --brand: #0f6fb2;
-      --brand-2: #1d8fd5;
-      --shadow: 0 14px 28px rgba(15, 60, 99, 0.12);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(15, 111, 178, 0.18), transparent 34%),
-        radial-gradient(circle at 90% 90%, rgba(29, 143, 213, 0.14), transparent 34%),
-        var(--bg);
-      padding: 14px;
-      display: grid;
-      place-items: center;
-    }
-
-    .wrap {
-      width: min(980px, 100%);
-      display: grid;
-      gap: 12px;
-    }
-
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      padding: 14px;
-    }
-
-    h1, h3 { margin: 0; }
-
-    .muted { color: var(--muted); font-size: 13px; }
-
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      margin-top: 8px;
-    }
-
-    .board {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .sub {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .count {
-      font-size: 12px;
-      color: #225478;
-      background: #edf6fd;
-      border: 1px solid #c9deef;
-      border-radius: 999px;
-      padding: 2px 8px;
-    }
-
-    input, textarea, button {
-      font-family: inherit;
-      font-size: 14px;
-    }
-
-    input, textarea {
-      border: 1px solid #c9d7e5;
-      border-radius: 9px;
-      padding: 8px 10px;
-      outline: none;
-      background: #fff;
-    }
-
-    input:focus, textarea:focus {
-      border-color: var(--brand);
-      box-shadow: 0 0 0 3px rgba(15, 111, 178, 0.12);
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 96px;
-      resize: vertical;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 9px;
-      min-height: 36px;
-      padding: 0 14px;
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      background: linear-gradient(120deg, var(--brand), var(--brand-2));
-    }
-
-    .btn.secondary {
-      color: #255476;
-      background: #edf5fb;
-      border: 1px solid #c5d9e9;
-    }
-
-    .list {
-      display: grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .item {
-      border: 1px solid #d6e3ef;
-      border-radius: 12px;
-      padding: 10px;
-      display: grid;
-      gap: 8px;
-      background: #fff;
-    }
-
-    .head {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .qid {
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    .note {
-      font-size: 12px;
-      color: #3f5f7a;
-      background: #f4f9fd;
-      border: 1px dashed #b8d4e8;
-      border-radius: 8px;
-      padding: 6px 8px;
-    }
-
-    .answer {
-      background: #f7fbff;
-      border: 1px dashed #b6d6ea;
-      border-radius: 8px;
-      padding: 8px;
-      white-space: pre-wrap;
-      line-height: 1.6;
-      font-size: 13px;
-    }
-
-    @media (max-width: 920px) {
-      .board {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/theme.css" />
 </head>
-<body>
+<body class="senior-page">
   <main class="wrap">
-    <section class="panel">
+    <section class="panel dashboard-head">
       <h1>学长处理台</h1>
-      <div class="muted">正式鉴权模式：仅拥有答复权限的已登录账号可以进入和操作。</div>
-      <div class="row">
-        <span id="me" class="count">加载中</span>
-        <input id="searchInput" type="text" placeholder="搜索编号/提问/回答/查询码" style="min-width: 220px;" />
-        <button id="searchBtn" class="btn secondary" type="button">搜索</button>
-        <button id="refreshBtn" class="btn" type="button">刷新待办</button>
-        <a class="btn secondary" href="/logout">退出登录</a>
-        <a class="btn secondary" href="/">返回首页</a>
+      <div class="muted">这里集中显示待回复与已回复的问题，具备答复权限的账号可直接处理。</div>
+      <div class="row ops-toolbar">
+        <div class="ops-identity">
+          <span class="muted">当前账号</span>
+          <span id="me" class="count">加载中</span>
+        </div>
+        <div class="ops-search">
+          <input id="searchInput" class="search-field" type="text" placeholder="搜索编号、问题关键词或查询码" />
+          <button id="searchBtn" class="btn secondary" type="button">开始搜索</button>
+        </div>
+        <div class="ops-actions">
+          <button id="refreshBtn" class="btn" type="button">刷新列表</button>
+          <a class="btn secondary" href="/logout">退出登录</a>
+          <a class="btn secondary" href="/">返回首页</a>
+        </div>
       </div>
-      <div id="status" class="muted" style="margin-top: 8px;"></div>
+      <div id="status" class="section-status"></div>
     </section>
 
-    <section class="board">
+    <section class="board senior-board">
       <section class="panel">
         <div class="sub">
-          <h3>待处理问题</h3>
+          <h3>待回复问题</h3>
           <span id="pendingCount" class="count">0</span>
         </div>
         <div id="pendingList" class="list"></div>
@@ -202,7 +40,7 @@
 
       <section class="panel">
         <div class="sub">
-          <h3>已处理问题</h3>
+          <h3>已回复记录</h3>
           <span id="answeredCount" class="count">0</span>
         </div>
         <div id="answeredList" class="list"></div>
@@ -229,9 +67,9 @@
             <div class="qid">#${item.id} ${esc(item.title || '未命名问题')}</div>
             <div class="muted">${esc(item.channel || '-')} · 查询码 ${esc(item.view_code || '-')}</div>
           </div>
-          <div>${esc(item.content || '')}</div>
-          <div class="note">来自: ${esc(item.from_user_display || '已认证用户')} · 提交时间: ${esc(fmtTs(item.created_at))}</div>
-          <textarea placeholder="请输入你的人工回复" data-answer-for="${item.id}"></textarea>
+          <div class="item-content">${esc(item.content || '')}</div>
+          <div class="note">提问人: ${esc(item.from_user_display || '已认证用户')} · 提交时间: ${esc(fmtTs(item.created_at))}</div>
+          <textarea class="answer-input" rows="5" placeholder="请输入本次回复内容" data-answer-for="${item.id}"></textarea>
           <div class="row">
             <button class="btn" data-submit-for="${item.id}" type="button">提交回复</button>
           </div>
@@ -240,16 +78,16 @@
     }
 
     function answeredCard(item) {
-      const statusText = item.status === 'closed' ? '已关闭' : '已回答';
+      const statusText = item.status === 'closed' ? '已结束' : '已回复';
       return `
         <article class="item">
           <div class="head">
             <div class="qid">#${item.id} ${esc(item.title || '未命名问题')}</div>
             <div class="muted">${esc(statusText)} · ${esc(item.channel || '-')} · 查询码 ${esc(item.view_code || '-')}</div>
           </div>
-          <div>${esc(item.content || '')}</div>
+          <div class="item-content">${esc(item.content || '')}</div>
           <div class="answer">${esc(item.answer || '')}</div>
-          <div class="note">提问者: ${esc(item.from_user_display || '已认证用户')} · 回答者: ${esc(item.answerer_display || item.answerer_nickname || '-')} · 回答时间: ${esc(fmtTs(item.answered_at))}</div>
+          <div class="note">提问人: ${esc(item.from_user_display || '已认证用户')} · 回复人: ${esc(item.answerer_display || item.answerer_nickname || '-')} · 回复时间: ${esc(fmtTs(item.answered_at))}</div>
         </article>
       `;
     }
@@ -267,21 +105,28 @@
         const res = await fetch(`/api/tasks/pending?q=${encodeURIComponent(currentQuery)}`);
         const data = await res.json();
         if (!res.ok) {
+          if (res.status === 403) {
+            listEl.innerHTML = '<div class="muted">当前账号暂无处理权限。</div>';
+            countEl.textContent = '-';
+            return { ok: false, denied: true };
+          }
           setStatus(data.error || '加载失败');
           countEl.textContent = '0';
-          return;
+          return { ok: false };
         }
 
         const items = data.items || [];
         countEl.textContent = `${items.length}`;
         if (!items.length) {
-          listEl.innerHTML = '<div class="muted">暂无待办问题。</div>';
-          return;
+          listEl.innerHTML = '<div class="muted">当前没有待回复问题。</div>';
+          return { ok: true };
         }
         listEl.innerHTML = items.map(pendingCard).join('');
+        return { ok: true };
       } catch (err) {
         setStatus('网络异常，请稍后再试。');
         countEl.textContent = '0';
+        return { ok: false };
       }
     }
 
@@ -294,26 +139,44 @@
         const res = await fetch(`/api/tasks/answered?q=${encodeURIComponent(currentQuery)}`);
         const data = await res.json();
         if (!res.ok) {
+          if (res.status === 403) {
+            listEl.innerHTML = '<div class="muted">当前账号暂无处理权限。</div>';
+            countEl.textContent = '-';
+            return { ok: false, denied: true };
+          }
           countEl.textContent = '0';
-          return;
+          return { ok: false };
         }
 
         const items = data.items || [];
         countEl.textContent = `${items.length}`;
         if (!items.length) {
-          listEl.innerHTML = '<div class="muted">暂无已回答记录。</div>';
-          return;
+          listEl.innerHTML = '<div class="muted">当前没有已回复记录。</div>';
+          return { ok: true };
         }
         listEl.innerHTML = items.map(answeredCard).join('');
+        return { ok: true };
       } catch (err) {
         countEl.textContent = '0';
+        return { ok: false };
       }
     }
 
     async function loadAll() {
-      setStatus(`加载中...${currentQuery ? `（搜索: ${currentQuery}）` : ''}`);
-      await Promise.all([loadPending(), loadAnswered()]);
-      setStatus(`加载完成${currentQuery ? `，当前搜索：${currentQuery}` : ''}`);
+      setStatus(`正在加载问题${currentQuery ? `：${currentQuery}` : ''}`);
+      const [pendingState, answeredState] = await Promise.all([loadPending(), loadAnswered()]);
+
+      if (pendingState?.denied || answeredState?.denied) {
+        setStatus('当前账号暂无处理权限，可联系管理员开通后再处理问题。');
+        return;
+      }
+
+      if (!pendingState?.ok || !answeredState?.ok) {
+        setStatus('列表刷新失败，请稍后再试。');
+        return;
+      }
+
+      setStatus(`列表已更新${currentQuery ? `，当前筛选：${currentQuery}` : ''}`);
     }
 
     async function submitAnswer(questionId) {
@@ -321,11 +184,11 @@
       const content = ta ? ta.value.trim() : '';
 
       if (!content) {
-        setStatus('请输入回复内容后再提交。');
+        setStatus('请先填写回复内容，再提交。');
         return;
       }
 
-      setStatus(`正在提交 #${questionId} ...`);
+      setStatus(`正在提交 #${questionId} 的回复...`);
       try {
         const res = await fetch('/api/answers', {
           method: 'POST',
@@ -340,7 +203,7 @@
           return;
         }
 
-        setStatus(`#${questionId} 提交成功`);
+        setStatus(`#${questionId} 已提交回复`);
         await loadAll();
       } catch (err) {
         setStatus('提交失败，请稍后重试。');

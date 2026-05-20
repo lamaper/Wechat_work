@@ -1,0 +1,96 @@
+--- CASE 1 ---
+question=北理工奖学金主要类型和申请建议有哪些？
+status=200 elapsed=10.83s
+mode=web strategy=rag_then_web kb_score=0.775507390499115
+answer_preview=## 结论  北京理工大学奖学金主要分为**国家类奖学金**、**学校学业奖学金**、**社会类奖学金****和**新生可关注的特殊项目**。申请建议需根据年级、成绩、家庭经济状况等条件针对性准备。  ## 核验与补充  ### 1. 主要奖学金类型（综合知识库与网页）  | 类型 | 金额/说明 | 适用对象 | 关键条件 | |------|------------|----------|----------| | **国家奖学金** | 8000元/年 | 大二及以上 | 成绩前10%，无违纪 | | **国家励志奖学金** | 5000元/年 | 大二及以上，需通过家庭经济困难认定 | 成绩+贫困认定 | | **学校学业奖学金**（优秀学生奖） | 一等1100元、二等800元、三等500元/学期 | 全日制本科生 | 成绩排名、综合素质测评 | | **学习进步奖** | 50
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.776）
+step=web_search ok=True msg=已启动全网搜索：北理工奖学金主要类型和申请建议有哪些？
+step=web_search ok=True msg=duckduckgo 提取到 7 个候选网址
+step=web_search ok=True msg=候选网页已足够，提前结束后续搜索（7 个）
+step=web_search ok=True msg=全网搜索获得 6 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 3 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2623 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2025 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 785 字符
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 2 ---
+question=报到当天需要准备哪些材料？
+status=200 elapsed=48.49s
+mode=web strategy=rag_then_web kb_score=0.7731410562992096
+answer_preview=## 结论  报到当天，你需要准备以下核心材料： 1. **录取通知书**（原件） 2. **身份证**（原件） 3. **家庭经济困难相关证明材料**（如申请绿色通道，需准备低保证、建档立卡证明等，具体要求以当年资助中心通知为准）  ## 核验与补充  - **知识库确认**：知识库明确要求出示录取通知书、身份证等材料核验身份，并提到绿色通道申请需准备家庭经济困难证明材料。 - **网页补充**：网页证据（如《北京理工大学2024级本科新生入学须知》）确认报到地点为**良乡校区**，并补充了接站安排（北京站、北京南站等设有迎新班车），但未额外列出其他材料要求。网页内容与知识库一致，无冲突。 - **其他建议**：建议随身携带**校园卡充值资金**（可通过圈存机或线上平台充值）、**个人生活用品**（如宿舍通风后铺床所需物品），并提前关注**校医院体检通知**（入学后统一组织，需空腹抽血）
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.773）
+step=web_search ok=True msg=已启动全网搜索：北京理工大学 报到当天需要准备哪些材料？
+step=web_search ok=True msg=duckduckgo 提取到 7 个候选网址
+step=web_search ok=True msg=候选网页已足够，提前结束后续搜索（7 个）
+step=web_search ok=True msg=全网搜索获得 6 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 3 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html; charset=utf-8
+step=extract ok=True msg=提取正文成功，长度 140 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html; charset=utf-8
+step=extract ok=True msg=提取正文成功，长度 2007 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html;charset=utf-8
+step=extract ok=True msg=提取正文成功，长度 2182 字符
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 3 ---
+question=北京大学在哪里？
+status=200 elapsed=10.33s
+mode=kb strategy=rag_then_web kb_score=0.0
+answer_preview=暂时不能可靠回答这个问题。  本轮没有抓到可用网页正文，而本地知识库与问题的相关性也不足。为了避免编造，我先不给出结论。  你可以尝试： - 明确写出机构全名、产品名或官方站点名 - 把问题缩小到一个可核验点，例如开放时间、步骤、政策条款 - 稍后重试，或换成更接近官方标题的问法
+step=kb_retrieve ok=False msg=问题不属于北理域，已跳过本地知识库，直接进入网页检索
+step=web_search ok=True msg=已启动全网搜索：北京大学在哪里？
+step=web_search ok=True msg=duckduckgo 提取到 2 个候选网址
+step=web_search ok=False msg=so360 搜索请求失败: HTTPSConnectionPool(host='m.so.com', port=443): Max retries exceeded with url: /s?q=%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=web_search ok=False msg=baidu 搜索请求失败: HTTPSConnectionPool(host='m.baidu.com', port=443): Max retries exceeded with url: /s?word=%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=web_search ok=True msg=全网搜索获得 2 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 2 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+step=evidence_guard ok=False msg=网页未抓到可用正文，且本地知识库相关性不足（top_score=0.000），本轮不输出无依据结论
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 4 ---
+question=清华大学图书馆开放时间是什么？
+status=200 elapsed=10.26s
+mode=web strategy=rag_then_web kb_score=0.0
+answer_preview=## 结论  清华大学图书馆的常规开放时间为 **周一至周日 8:00～22:00**，其中部分区域（如西407、409）开放时间为 **8:00～12:00 和 13:00～17:00**，读者服务费用结算处开放时间为 **8:00～17:00**，美术学院大楼A区域开放时间为 **9:00～17:00**。此外，图书馆主页、馆藏目录查询系统和自助还书服务为 **24小时开放**。节假日及特殊时期的开放时间请关注图书馆“通知公告”。  ## 核验与补充  - **网页核验确认**：本次抓取的清华大学图书馆官网“开馆时间”页面（https://lib.tsinghua.edu.cn/kgsj.htm）明确列出了上述常规开放时间，并提示节假日及特殊时期需关注通知公告。另一网页（关于公布2025年暑假图书馆开馆时间的通知）虽未直接显示具体时间，但提供了咨询电话（62782137）和服务时间（周
+step=kb_retrieve ok=False msg=问题不属于北理域，已跳过本地知识库，直接进入网页检索
+step=web_search ok=True msg=已启动全网搜索：清华大学图书馆开放时间是什么？
+step=web_search ok=True msg=duckduckgo 提取到 6 个候选网址
+step=web_search ok=True msg=候选网页已足够，提前结束后续搜索（6 个）
+step=web_search ok=True msg=全网搜索获得 6 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 3 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 556 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 830 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 4254 字符
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答

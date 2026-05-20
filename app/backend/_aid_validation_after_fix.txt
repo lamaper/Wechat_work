@@ -1,0 +1,53 @@
+question=绿色通道和助学金我这种家里比较紧张的情况先办哪个？
+status=200 elapsed=3.55s mode=kb kb_score=0.7527772486209869
+answer=同学你好！针对你“家里比较紧张”的情况，建议**先办理绿色通道**，再申请助学金。
+
+根据参考知识，绿色通道是入学时的“缓缴”通道，能让你**先报到入学**，暂缓缴纳学费和住宿费。而助学金（如国家助学金）是入学后通过申请获得的资金支持，用于解决后续费用。两者是先后衔接的关系：通过绿色通道入学后，再配合资助中心申请助学金等资助。
+
+具体流程建议：
+1. **报到前**：登录迎新网（https://hi.bit.edu.cn/）了解政策，并提前在线提交绿色通道申请。
+2. **准备材料**：家庭经济困难相关证明（如低保证、建档立卡证明、家庭收入证明等），具体要求以学生资助中心当年通知为准。
+3. **报到当天**：到迎新现场“绿色通道”
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.753）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+
+question=清华大学助学金怎么申请？
+status=200 elapsed=28.40s mode=web kb_score=0.0
+answer=## 结论
+根据当前可获取的网页信息，清华大学助学金申请流程因资助项目不同而有所差异，但核心步骤通常包括：**确认资格 → 准备材料 → 提交申请 → 院系审核 → 学校审批**。具体申请方式需以清华大学官方发布的最新通知为准。
+
+## 核验与补充
+- **网页证据确认**：  
+  - 清华大学研究生资助体系（来源1）提到“经济资助体系”为研究生提供保障，但未明确申请流程。  
+  - 清华大学本科生助学金（来源2）以“新鸿基地产郭氏基金”为例，要求申请者提供“贫困证明”并获学院推荐，说明申请需通过院系初审。  
+  - 清华大学国家助学金评审实施细则（来源3）虽未直接给出流程，但暗示存在校级评审机制。  
+- **关键补充**：
+step=kb_retrieve ok=False msg=问题不属于北理域，已跳过本地知识库，直接进入网页检索
+step=web_search ok=True msg=已启动全网搜索：清华大学助学金怎么申请？
+step=web_search ok=True msg=duckduckgo 提取到 9 个候选网址
+step=web_search ok=True msg=候选网页已足够，提前结束后续搜索（9 个）
+step=web_search ok=True msg=全网搜索获得 6 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 3 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=False msg=HTTPSConnectionPool(host='www.tsinghua.edu.cn', port=443): Max retries exceeded with url: /zjqh/xxgk1/gksxx/xsglfww/xsjxj_zxj_xfjm_zxdk.htm (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=False msg=HTTPSConnectionPool(host='www.tsinghua.edu.cn', port=443): Max retries exceeded with url: /jyjx/yjsjy/jztx.htm (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2319 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 1947 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=False msg=HTTPSConnectionPool(host='www.join-tsinghua.edu.cn', port=443): Max retries exceeded with url: /info/1027/1145.htm (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2772 字符
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答

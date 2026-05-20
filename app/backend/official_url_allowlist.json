@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-03",
-  "source": "Curated from BIT official homepage navigation and public official subdomains validated on 2026-05-03.",
+  "generated_at": "2026-05-19",
+  "source": "Curated from BIT official homepage navigation, public official subdomains, and validated public entry pages on 2026-05-19.",
   "sites": [
     {
       "name": "学校官网",
@@ -8,15 +8,23 @@
       "root_url": "https://www.bit.edu.cn/",
       "category": "门户",
       "verified": true,
-      "crawl_enabled": true
+      "crawl_enabled": true,
+      "aliases": ["官网", "学校主页", "学校通知", "通知公告"],
+      "summary": "学校新闻、通知公告、机构导航和公开信息总入口。",
+      "scenes": ["学校通知", "部门导航", "公开信息"],
+      "access": "公开访问"
     },
     {
       "name": "迎新网",
       "host": "hi.bit.edu.cn",
       "root_url": "https://hi.bit.edu.cn/",
       "category": "新生服务",
-      "verified": false,
-      "crawl_enabled": true
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["新生网", "迎新系统", "报到入口"],
+      "summary": "新生报到、材料清单、校区安排和迎新流程入口。",
+      "scenes": ["报到", "迎新", "新生材料", "到校安排"],
+      "access": "公开访问"
     },
     {
       "name": "本科招生网",
@@ -24,23 +32,83 @@
       "root_url": "https://admission.bit.edu.cn/",
       "category": "招生",
       "verified": true,
-      "crawl_enabled": true
+      "crawl_enabled": true,
+      "aliases": ["本科招生", "招生办", "录取查询"],
+      "summary": "本科招生章程、报考指南、录取信息与招生咨询入口。",
+      "scenes": ["本科招生", "录取结果", "招生政策"],
+      "access": "公开访问"
     },
     {
       "name": "研究生院",
       "host": "grd.bit.edu.cn",
       "root_url": "https://grd.bit.edu.cn/",
-      "category": "招生培养",
+      "category": "研究生",
       "verified": true,
-      "crawl_enabled": true
+      "crawl_enabled": true,
+      "aliases": ["研究生招生", "研究生通知"],
+      "summary": "研究生招生、培养和研究生通知公告入口。",
+      "scenes": ["研究生招生", "培养方案", "研究生新生通知"],
+      "access": "公开访问"
     },
     {
       "name": "教务部",
       "host": "jwc.bit.edu.cn",
       "root_url": "https://jwc.bit.edu.cn/",
-      "category": "教学教务",
+      "category": "教务",
       "verified": true,
-      "crawl_enabled": true
+      "crawl_enabled": true,
+      "aliases": ["教务", "选课", "教学日历", "成绩", "学籍"],
+      "summary": "选课通知、教学日历、培养方案、成绩与学籍管理公告。",
+      "scenes": ["选课", "教学日历", "培养方案", "成绩", "学籍"],
+      "access": "公开访问"
+    },
+    {
+      "name": "教学运行与考务中心",
+      "host": "jxzx.bit.edu.cn",
+      "root_url": "https://jxzx.bit.edu.cn/",
+      "category": "考务",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["考务", "缓考", "转专业", "考试安排"],
+      "summary": "考试安排、缓考、转专业和教学运行通知入口。",
+      "scenes": ["考试安排", "缓考", "转专业", "考务通知"],
+      "access": "公开访问"
+    },
+    {
+      "name": "学生服务中心",
+      "host": "student.bit.edu.cn",
+      "root_url": "https://student.bit.edu.cn/",
+      "category": "学生事务",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["资助中心", "学工", "绿色通道", "助学金", "奖学金"],
+      "summary": "学生事务、资助政策、绿色通道、助学贷款和学生手册入口。",
+      "scenes": ["奖学金", "助学金", "绿色通道", "助学贷款", "学生手册"],
+      "access": "公开访问"
+    },
+    {
+      "name": "数字化与智算技术中心",
+      "host": "itc.bit.edu.cn",
+      "root_url": "https://itc.bit.edu.cn/",
+      "category": "信息化服务",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["信息化服务", "数字化中心", "智算中心", "校园网", "VPN", "统一认证", "正版软件", "校园邮箱"],
+      "summary": "校园网、统一认证、VPN、正版软件、校园邮箱和数智服务公告与指南。",
+      "scenes": ["校园网", "VPN", "统一认证", "正版软件", "校园邮箱", "网络缴费"],
+      "access": "公开公告可直接查看，具体业务可能跳转登录系统"
+    },
+    {
+      "name": "校医院",
+      "host": "xyy.bit.edu.cn",
+      "root_url": "https://xyy.bit.edu.cn/",
+      "category": "医疗",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["门诊", "医保", "报销", "转诊", "体检"],
+      "summary": "门诊、医保、报销、转诊和体检相关公开通知。",
+      "scenes": ["门诊", "医保", "报销", "转诊", "体检"],
+      "access": "公开访问"
     },
     {
       "name": "图书馆",
@@ -48,7 +116,23 @@
       "root_url": "https://lib.bit.edu.cn/",
       "category": "学习资源",
       "verified": true,
-      "crawl_enabled": true
+      "crawl_enabled": true,
+      "aliases": ["借书", "数据库", "座位预约", "图书检索"],
+      "summary": "图书检索、借阅、数据库导航、座位预约与馆内公告入口。",
+      "scenes": ["借书", "续借", "数据库", "座位预约"],
+      "access": "公开入口可访问，部分服务需登录"
+    },
+    {
+      "name": "财务处",
+      "host": "cwc.bit.edu.cn",
+      "root_url": "https://cwc.bit.edu.cn/",
+      "category": "财务",
+      "verified": false,
+      "crawl_enabled": true,
+      "aliases": ["学费", "住宿费", "缴费", "收费"],
+      "summary": "学费缴纳、收费公告和财务办事说明入口。",
+      "scenes": ["学费", "住宿费", "缴费", "收费通知"],
+      "access": "公开通知可直接查看，部分业务可能跳转登录系统"
     },
     {
       "name": "就业信息网",
@@ -56,47 +140,443 @@
       "root_url": "https://job.bit.edu.cn/",
       "category": "就业",
       "verified": true,
-      "crawl_enabled": true
+      "crawl_enabled": true,
+      "aliases": ["就业", "招聘", "宣讲会", "实习"],
+      "summary": "就业通知、招聘信息、宣讲会和就业指导入口。",
+      "scenes": ["就业通知", "招聘", "实习", "宣讲会"],
+      "access": "公开访问"
+    },
+    {
+      "name": "国际交流合作处",
+      "host": "international.bit.edu.cn",
+      "root_url": "https://international.bit.edu.cn/",
+      "category": "国际交流",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["国际交流", "交换生", "海外学习", "联合培养", "港澳台"],
+      "summary": "国际交流项目、海外学习、联合培养和涉外事务通知入口。",
+      "scenes": ["交换项目", "国际暑校", "海外学习", "联合培养"],
+      "access": "公开访问"
+    },
+    {
+      "name": "国际学生中心",
+      "host": "isc.bit.edu.cn",
+      "root_url": "https://isc.bit.edu.cn/",
+      "category": "国际学生",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["国际学生", "留学生", "留学生中心", "国际学生招生", "签证", "住宿"],
+      "summary": "国际学生招生、签证、住宿和国际学生校园生活入口。",
+      "scenes": ["国际学生招生", "签证", "住宿", "国际学生手册"],
+      "access": "公开访问"
     },
     {
       "name": "英文站",
       "host": "english.bit.edu.cn",
       "root_url": "https://english.bit.edu.cn/",
-      "category": "国际化",
-      "verified": false,
-      "crawl_enabled": true
+      "category": "英文门户",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["英文官网", "英文站"],
+      "summary": "学校英文门户与国际传播内容入口。",
+      "scenes": ["英文介绍", "国际传播"],
+      "access": "公开访问"
     },
     {
       "name": "信息公开",
       "host": "xxgk.bit.edu.cn",
       "root_url": "https://xxgk.bit.edu.cn/",
       "category": "校务公开",
-      "verified": false,
-      "crawl_enabled": true
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["信息公开", "制度文件", "公开信息"],
+      "summary": "制度文件、校务公开和信息公开栏目入口。",
+      "scenes": ["制度文件", "公开信息", "校务公开"],
+      "access": "公开访问"
     },
     {
       "name": "校友会",
       "host": "xyw.bit.edu.cn",
       "root_url": "https://xyw.bit.edu.cn/",
       "category": "校友",
-      "verified": false,
-      "crawl_enabled": true
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["校友", "校友活动"],
+      "summary": "校友新闻、活动和校友服务入口。",
+      "scenes": ["校友活动", "校友服务"],
+      "access": "公开访问"
     },
     {
       "name": "基金会",
       "host": "ef.bit.edu.cn",
       "root_url": "https://ef.bit.edu.cn/",
-      "category": "公益合作",
-      "verified": false,
-      "crawl_enabled": true
+      "category": "基金会",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["捐赠", "基金会"],
+      "summary": "捐赠项目、合作信息和公益活动入口。",
+      "scenes": ["捐赠", "公益合作"],
+      "access": "公开访问"
     },
     {
       "name": "人事处",
       "host": "renshichu.bit.edu.cn",
       "root_url": "https://renshichu.bit.edu.cn/",
-      "category": "招聘人事",
-      "verified": false,
-      "crawl_enabled": true
+      "category": "人事",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["人事", "招聘", "人才招聘"],
+      "summary": "人才招聘、人事制度和教职工办事信息入口。",
+      "scenes": ["人才招聘", "人事制度"],
+      "access": "公开访问"
+    },
+    {
+      "name": "宇航学院",
+      "host": "sae.bit.edu.cn",
+      "root_url": "https://sae.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["宇航", "飞行器", "航天工程"],
+      "summary": "宇航学院官方网站，飞行器设计、航天工程等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "机电学院",
+      "host": "smen.bit.edu.cn",
+      "root_url": "https://smen.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["机电", "兵器", "机械电子"],
+      "summary": "机电学院官方网站，兵器科学与技术、机械电子工程等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "机械与车辆学院",
+      "host": "me.bit.edu.cn",
+      "root_url": "https://me.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["机车学院", "车辆工程", "机械工程"],
+      "summary": "机械与车辆学院官方网站，车辆工程（王牌专业）、机械工程等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "光电学院",
+      "host": "opt.bit.edu.cn",
+      "root_url": "https://opt.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["光电", "光学工程", "光电子"],
+      "summary": "光电学院官方网站，光学工程、光电子技术等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "信息与电子学院",
+      "host": "sie.bit.edu.cn",
+      "root_url": "https://sie.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["信息学院", "电子信息", "通信工程"],
+      "summary": "信息与电子学院官方网站，电子信息工程、通信工程等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "集成电路与电子学院",
+      "host": "ice.bit.edu.cn",
+      "root_url": "https://ice.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["集成电路", "微电子", "半导体"],
+      "summary": "集成电路与电子学院官方网站，集成电路设计、半导体器件等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "自动化学院",
+      "host": "ac.bit.edu.cn",
+      "root_url": "https://ac.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["自动化", "控制", "控制科学"],
+      "summary": "自动化学院官方网站，控制科学与工程（A档学科）、自动化等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "计算机学院",
+      "host": "cs.bit.edu.cn",
+      "root_url": "https://cs.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["计算机", "CS", "计科"],
+      "summary": "计算机学院官方网站，计算机科学与技术、人工智能等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "网络空间安全学院",
+      "host": "cst.bit.edu.cn",
+      "root_url": "https://cst.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["网安学院", "网络安全", "密码学"],
+      "summary": "网络空间安全学院官方网站，网络安全、密码学等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "材料学院",
+      "host": "mse.bit.edu.cn",
+      "root_url": "https://mse.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["材料", "材料科学"],
+      "summary": "材料学院官方网站，材料科学与工程（双一流学科）专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "化学与化工学院",
+      "host": "cce.bit.edu.cn",
+      "root_url": "https://cce.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["化学", "化工", "含能材料"],
+      "summary": "化学与化工学院官方网站，化学工程、含能材料等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "生命学院",
+      "host": "ls.bit.edu.cn",
+      "root_url": "https://ls.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["生命科学", "生物工程", "生物医学"],
+      "summary": "生命学院官方网站，生物工程、生物医学工程等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "医学技术学院",
+      "host": "smt.bit.edu.cn",
+      "root_url": "https://smt.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["医学技术", "医工融合"],
+      "summary": "医学技术学院官方网站，医学技术、医工融合等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "数学与统计学院",
+      "host": "math.bit.edu.cn",
+      "root_url": "https://math.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["数学", "统计", "数学系"],
+      "summary": "数学与统计学院官方网站，数学与应用数学、统计学等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "物理学院",
+      "host": "physics.bit.edu.cn",
+      "root_url": "https://physics.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["物理", "物理学"],
+      "summary": "物理学院官方网站，物理学（双一流学科）专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "管理与经济学院",
+      "host": "sme.bit.edu.cn",
+      "root_url": "https://sme.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["管理学院", "经管", "工商管理", "经济"],
+      "summary": "管理与经济学院官方网站，工商管理、经济学等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "法学院",
+      "host": "law.bit.edu.cn",
+      "root_url": "https://law.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["法律", "法学"],
+      "summary": "法学院官方网站，法学专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "外国语学院",
+      "host": "sfl.bit.edu.cn",
+      "root_url": "https://sfl.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["外语", "英语", "日语", "德语"],
+      "summary": "外国语学院官方网站，英语、日语、德语等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "设计与艺术学院",
+      "host": "design.bit.edu.cn",
+      "root_url": "https://design.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["设计", "艺术", "工业设计"],
+      "summary": "设计与艺术学院官方网站，工业设计、视觉传达等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "徐特立学院",
+      "host": "xuteli.bit.edu.cn",
+      "root_url": "https://xuteli.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["特立学院", "拔尖创新", "未来精工"],
+      "summary": "徐特立学院（未来精工技术学院）官方网站，拔尖创新人才培养特区。",
+      "scenes": ["学院通知", "拔尖人才培养", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "人文与社会科学学院",
+      "host": "rw.bit.edu.cn",
+      "root_url": "https://rw.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["人文学院", "社会工作", "教育学"],
+      "summary": "人文与社会科学学院官方网站，社会工作、教育学等专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "马克思主义学院",
+      "host": "marx.bit.edu.cn",
+      "root_url": "https://marx.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["马克思学院", "马克思主义理论"],
+      "summary": "马克思主义学院官方网站，马克思主义理论专业信息。",
+      "scenes": ["学院通知", "专业介绍", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "北京学院",
+      "host": "bj.bit.edu.cn",
+      "root_url": "https://bj.bit.edu.cn/",
+      "category": "学院网站",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["跨校双培", "双培计划"],
+      "summary": "北京学院官方网站，跨校双培项目（与中国政法大学、北京外国语大学等合作）。",
+      "scenes": ["学院通知", "双培项目", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "前沿交叉科学研究院",
+      "host": "arims.bit.edu.cn",
+      "root_url": "https://arims.bit.edu.cn/",
+      "category": "研究机构",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["前沿院", "交叉科学", "高比能电池"],
+      "summary": "前沿交叉科学研究院官方网站，跨学科研究方向（高比能电池、光电转换等）。",
+      "scenes": ["研究方向", "学术动态", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "北理云盘",
+      "host": "pan.bit.edu.cn",
+      "root_url": "http://pan.bit.edu.cn/",
+      "category": "信息化服务",
+      "verified": true,
+      "crawl_enabled": false,
+      "aliases": ["云存储", "校园网盘"],
+      "summary": "校园云存储服务，校外需通过VPN访问。",
+      "scenes": ["文件存储", "文件共享"],
+      "access": "校内可直接访问，校外需VPN"
+    },
+    {
+      "name": "体育部",
+      "host": "ty.bit.edu.cn",
+      "root_url": "https://ty.bit.edu.cn/",
+      "category": "体育",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["体育教学", "体测", "校运会"],
+      "summary": "体育部官方网站，体育教学安排、体质测试通知、校运会信息。",
+      "scenes": ["体育教学", "体测安排", "运动会"],
+      "access": "公开访问"
+    },
+    {
+      "name": "通知公告首页",
+      "host": "tongzhi.bit.edu.cn",
+      "root_url": "https://tongzhi.bit.edu.cn/zxtz/index.htm",
+      "category": "信息发布",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["通知公告", "公告通知"],
+      "summary": "全校通知公告统一发布平台。",
+      "scenes": ["学校通知", "公告查询"],
+      "access": "公开访问"
+    },
+    {
+      "name": "珠海校区",
+      "host": "www.bitzh.edu.cn",
+      "root_url": "https://www.bitzh.edu.cn/",
+      "category": "校区",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["珠海", "珠海学院"],
+      "summary": "北京理工大学珠海校区官方网站。",
+      "scenes": ["校区信息", "招生信息"],
+      "access": "公开访问"
+    },
+    {
+      "name": "珠海校区研究生院",
+      "host": "grd.bitzh.edu.cn",
+      "root_url": "https://grd.bitzh.edu.cn/",
+      "category": "校区",
+      "verified": true,
+      "crawl_enabled": true,
+      "aliases": ["珠海研究生", "珠海研究生招生"],
+      "summary": "珠海校区研究生招生培养信息。",
+      "scenes": ["研究生招生", "培养方案"],
+      "access": "公开访问"
     }
   ],
   "restricted_sites": [
@@ -104,31 +584,51 @@
       "name": "智慧北理",
       "host": "ehall.bit.edu.cn",
       "root_url": "https://ehall.bit.edu.cn/",
-      "reason": "统一身份认证登录后才能访问业务内容"
+      "reason": "统一身份认证登录后才能访问业务内容",
+      "aliases": ["ehall", "办事大厅", "一站式办事", "校园卡", "缴费"],
+      "summary": "统一办事大厅，集成教务、学工、财务和校园卡等业务。",
+      "scenes": ["缴费", "校园卡", "综合办事", "在线申请"],
+      "access": "通常需要统一身份认证登录"
     },
     {
-      "name": "统一认证",
+      "name": "统一身份认证",
       "host": "sso.bit.edu.cn",
       "root_url": "https://sso.bit.edu.cn/",
-      "reason": "认证入口，仅适合登录跳转"
+      "reason": "认证入口，仅适合登录跳转",
+      "aliases": ["统一认证", "统一身份", "密码找回", "登录"],
+      "summary": "学校统一登录和密码找回入口。",
+      "scenes": ["登录", "密码重置", "账号异常"],
+      "access": "登录页公开，具体业务需认证"
     },
     {
-      "name": "校园网络入口",
+      "name": "WebVPN",
       "host": "webvpn.bit.edu.cn",
       "root_url": "https://webvpn.bit.edu.cn/",
-      "reason": "认证网关，匿名抓取价值低"
+      "reason": "认证网关，匿名抓取价值低",
+      "aliases": ["VPN", "校外访问", "远程访问", "数据库访问"],
+      "summary": "校外访问校内资源和数据库的统一入口。",
+      "scenes": ["校外访问数据库", "访问校内系统", "远程访问"],
+      "access": "需要统一身份认证登录"
     },
     {
       "name": "邮件系统",
       "host": "mail.bit.edu.cn",
       "root_url": "https://mail.bit.edu.cn/",
-      "reason": "邮件登录入口，不能匿名抓取邮件内容"
+      "reason": "邮件登录入口，不能匿名抓取邮件内容",
+      "aliases": ["邮箱", "校园邮箱", "邮件"],
+      "summary": "学校邮箱登录入口。",
+      "scenes": ["邮箱登录", "校园邮件"],
+      "access": "需要账号登录"
     },
     {
-      "name": "综合服务入口",
+      "name": "i北理 / 综合服务入口",
       "host": "i.bit.edu.cn",
       "root_url": "https://i.bit.edu.cn/",
-      "reason": "入口站点，实际业务依赖登录"
+      "reason": "入口站点，实际业务依赖登录",
+      "aliases": ["i北理", "综合服务入口", "online.bit.edu.cn"],
+      "summary": "历史综合服务入口或跳转页，部分服务会从这里进入。",
+      "scenes": ["综合服务", "历史入口", "跳转入口"],
+      "access": "通常需要统一身份认证登录"
     }
   ]
 }

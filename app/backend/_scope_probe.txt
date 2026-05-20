@@ -1,0 +1,47 @@
+question=北理工哪个食堂好吃？
+status=200 elapsed=2.72 mode=kb kb_score=0.7841787040233612
+answer=根据现有参考知识，无法直接确定“哪个食堂最好吃”，因为口味评价非常主观，且各食堂窗口和品类会轮换。不过，参考知识中提到了几个食堂的特点，供你参考：
+
+- **新食堂**（中关村校区）：靠近宿舍区，窗口品类多，人气最高。
+- **京工风味食堂**（中关村校区）：菜品偏家常和北方口味。
+- **延园餐厅**（中关村校区）：环境较好，适合改善伙食。
+- **清真食堂**：主要校区均有，满足清真饮食需求，也向所有学生开放。
+- **良乡校区食堂**：分布在生活区和教学区附近，规模和品
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.784）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+
+question=哪个食堂好吃啊？
+status=200 elapsed=31.30 mode=web kb_score=0.0
+answer=## 结论
+
+根据当前可获取的网页信息，**无法直接确定北京理工大学食堂的具体排名或“最好吃”的食堂**。网页内容主要涉及全国性大学食堂排名（如清华大学、四川大学、上海交通大学等），但**未提及北京理工大学**。因此，无法基于现有证据给出针对北理工食堂的明确推荐。
+
+## 核验与补充
+
+- **网页证据**：两份网页分别列出了2025年“最满意”大学食堂排名和“最好吃的大学食堂TOP10”，但均未包含北京理工大学。例如，排名中出现了清华大学、四川大学、上海交通大学、浙江大学等
+step=kb_retrieve ok=False msg=问题不属于北理域，已跳过本地知识库，直接进入网页检索
+step=web_search ok=True msg=已启动全网搜索：哪个食堂好吃啊？
+step=web_search ok=True msg=duckduckgo 提取到 5 个候选网址
+step=web_search ok=True msg=so360 提取到 0 个候选网址
+step=web_search ok=False msg=baidu 搜索请求失败: HTTPSConnectionPool(host='m.baidu.com', port=443): Max retries exceeded with url: /s?word=%E5%93%AA%E4%B8%AA%E9%A3%9F%E5%A0%82%E5%A5%BD%E5%90%83%E5%95%8A%EF%BC%9F (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=web_search ok=True msg=全网搜索获得 5 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 3 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=False msg=HTTPSConnectionPool(host='tieba.baidu.com', port=443): Max retries exceeded with url: /p/10232203052 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=False msg=HTTPSConnectionPool(host='www.thepaper.cn', port=443): Max retries exceeded with url: /newsDetail_forward_21219847 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html; charset=utf-8
+step=extract ok=True msg=提取正文成功，长度 8543 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html; charset=UTF-8
+step=extract ok=True msg=提取正文成功，长度 2836 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=False msg=HTTPSConnectionPool(host='www.thepaper.cn', port=443): Max retries exceeded with url: /newsDetail_forward_13062186 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答

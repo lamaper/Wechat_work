@@ -4,691 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>新生智能问答助手</title>
-  <style>
-    :root {
-      --bg: #f3efe6;
-      --surface: rgba(255, 251, 244, 0.78);
-      --surface-strong: #fffaf2;
-      --surface-dark: #18352b;
-      --ink: #1c2a24;
-      --muted: #6b766d;
-      --line: rgba(55, 77, 67, 0.14);
-      --emerald: #195f4a;
-      --emerald-soft: #d8ede5;
-      --amber: #c97728;
-      --amber-soft: #f5e2cc;
-      --rose-soft: #f4dfd8;
-      --shadow-lg: 0 28px 60px rgba(29, 42, 36, 0.16);
-      --shadow-md: 0 14px 30px rgba(29, 42, 36, 0.1);
-      --radius-xl: 30px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      height: 100vh;
-      min-height: 100vh;
-      font-family: "Source Han Sans SC", "Noto Sans SC", "Microsoft YaHei UI", sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at top left, rgba(25, 95, 74, 0.18), transparent 28%),
-        radial-gradient(circle at 88% 12%, rgba(201, 119, 40, 0.18), transparent 24%),
-        linear-gradient(180deg, #efe7db 0%, #f7f3ed 50%, #f4efe7 100%);
-      overflow: hidden;
-    }
-
-    a {
-      color: inherit;
-    }
-
-    .backdrop {
-      position: fixed;
-      border-radius: 999px;
-      filter: blur(12px);
-      opacity: 0.4;
-      pointer-events: none;
-    }
-
-    .backdrop.one {
-      width: 360px;
-      height: 360px;
-      background: rgba(25, 95, 74, 0.22);
-      top: -80px;
-      left: -70px;
-    }
-
-    .backdrop.two {
-      width: 280px;
-      height: 280px;
-      background: rgba(201, 119, 40, 0.18);
-      right: 8%;
-      top: 18%;
-    }
-
-    .backdrop.three {
-      width: 420px;
-      height: 420px;
-      background: rgba(151, 174, 163, 0.18);
-      right: -120px;
-      bottom: -140px;
-    }
-
-    .app-shell {
-      position: relative;
-      z-index: 1;
-      height: 100vh;
-      display: grid;
-      grid-template-columns: 340px minmax(0, 1fr);
-      grid-template-rows: minmax(0, 1fr);
-      gap: 20px;
-      padding: 22px;
-      overflow: hidden;
-    }
-
-    .rail,
-    .workspace {
-      min-height: 0;
-    }
-
-    .rail {
-      display: grid;
-      gap: 18px;
-      align-content: start;
-    }
-
-    .hero-card,
-    .panel,
-    .messages-panel,
-    .composer-card,
-    .topbar {
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      background: var(--surface);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      box-shadow: var(--shadow-md);
-    }
-
-    .hero-card {
-      padding: 28px;
-      border-radius: var(--radius-xl);
-      background:
-        linear-gradient(145deg, rgba(255, 250, 242, 0.95), rgba(240, 248, 244, 0.78)),
-        var(--surface);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-card::after {
-      content: "";
-      position: absolute;
-      inset: auto -70px -90px auto;
-      width: 220px;
-      height: 220px;
-      background: radial-gradient(circle, rgba(25, 95, 74, 0.18), transparent 70%);
-      border-radius: 999px;
-    }
-
-    .eyebrow {
-      margin: 0 0 12px;
-      letter-spacing: 0.18em;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--emerald);
-    }
-
-    .hero-card h1 {
-      margin: 0;
-      font-size: 34px;
-      line-height: 1.06;
-      font-family: "STZhongsong", "Songti SC", serif;
-    }
-
-    .hero-copy {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
-      max-width: 24em;
-    }
-
-    .badge-row,
-    .topbar-nav,
-    .prompt-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .badge-row {
-      margin-top: 18px;
-    }
-
-    .badge,
-    .panel-tag,
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border-radius: 999px;
-      padding: 7px 12px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .badge {
-      background: rgba(255, 255, 255, 0.8);
-      border: 1px solid rgba(56, 74, 66, 0.12);
-      color: #294136;
-    }
-
-    .badge-primary,
-    .status-pill.is-active {
-      background: linear-gradient(135deg, #1f7158, #154c3d);
-      color: #fff;
-      border: none;
-      box-shadow: 0 10px 24px rgba(25, 95, 74, 0.24);
-    }
-
-    .status-pill.is-warn {
-      background: linear-gradient(135deg, #c97728, #a45916);
-      color: #fff;
-      border: none;
-    }
-
-    .status-pill.is-idle,
-    .panel-tag {
-      background: rgba(25, 95, 74, 0.08);
-      color: var(--emerald);
-      border: 1px solid rgba(25, 95, 74, 0.1);
-    }
-
-    .metric-grid {
-      margin-top: 22px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .metric-card {
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.74);
-      border: 1px solid rgba(62, 79, 71, 0.1);
-    }
-
-    .metric-label {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .metric-card strong {
-      font-size: 18px;
-      line-height: 1.2;
-    }
-
-    .panel {
-      border-radius: var(--radius-lg);
-      padding: 20px;
-    }
-
-    .panel-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .panel-head h2,
-    .panel-head h3 {
-      margin: 0;
-      font-size: 17px;
-    }
-
-    .prompt-chip {
-      appearance: none;
-      border: 1px solid rgba(25, 95, 74, 0.14);
-      background: rgba(255, 255, 255, 0.84);
-      color: #284136;
-      border-radius: 14px;
-      padding: 10px 12px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-    }
-
-    .prompt-chip:hover {
-      transform: translateY(-1px);
-      border-color: rgba(25, 95, 74, 0.32);
-      box-shadow: 0 12px 24px rgba(25, 95, 74, 0.12);
-    }
-
-    .workspace {
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr) auto;
-      gap: 18px;
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    .topbar {
-      border-radius: 26px;
-      padding: 18px 22px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .topbar-title {
-      margin: 0;
-      font-size: 22px;
-      font-family: "STZhongsong", "Songti SC", serif;
-    }
-
-    .topbar-copy {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .top-link {
-      text-decoration: none;
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.86);
-      border: 1px solid rgba(56, 74, 66, 0.12);
-      font-size: 12px;
-      font-weight: 800;
-      color: #254035;
-    }
-
-    .conversation {
-      min-height: 0;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 18px;
-      overflow: hidden;
-    }
-
-    .messages-panel {
-      border-radius: var(--radius-xl);
-      padding: 18px;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    .messages {
-      min-height: 0;
-      overflow: auto;
-      padding-right: 4px;
-      display: grid;
-      gap: 14px;
-      align-content: start;
-      overscroll-behavior: contain;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .messages::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .messages::-webkit-scrollbar-thumb {
-      background: rgba(25, 95, 74, 0.2);
-      border-radius: 999px;
-    }
-
-    .empty-state {
-      border-radius: 24px;
-      padding: 28px;
-      border: 1px dashed rgba(25, 95, 74, 0.22);
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(236, 246, 241, 0.7));
-      min-height: 220px;
-      display: grid;
-      align-content: center;
-      gap: 12px;
-    }
-
-    .empty-kicker {
-      margin: 0;
-      font-size: 12px;
-      letter-spacing: 0.16em;
-      color: var(--emerald);
-      font-weight: 800;
-    }
-
-    .empty-state h3 {
-      margin: 0;
-      font-size: 28px;
-      line-height: 1.2;
-      font-family: "STZhongsong", "Songti SC", serif;
-      max-width: 12em;
-    }
-
-    .empty-state p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .msg {
-      display: grid;
-      gap: 10px;
-      max-width: min(760px, 88%);
-      animation: rise 0.22s ease;
-    }
-
-    .msg.user {
-      justify-self: end;
-    }
-
-    .msg.bot {
-      justify-self: start;
-    }
-
-    .msg-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .avatar {
-      width: 34px;
-      height: 34px;
-      display: inline-grid;
-      place-items: center;
-      border-radius: 12px;
-      font-weight: 800;
-      color: #fff;
-      background: linear-gradient(135deg, #1f7158, #164739);
-      box-shadow: 0 10px 22px rgba(25, 95, 74, 0.18);
-    }
-
-    .msg.user .avatar {
-      background: linear-gradient(135deg, #c97728, #a15f20);
-      box-shadow: 0 10px 22px rgba(201, 119, 40, 0.18);
-    }
-
-    .msg-meta-copy {
-      display: grid;
-      gap: 2px;
-    }
-
-    .msg-meta-copy strong {
-      color: var(--ink);
-      font-size: 13px;
-    }
-
-    .msg-body {
-      padding: 18px 18px 16px;
-      border-radius: 22px;
-      white-space: pre-wrap;
-      line-height: 1.7;
-      box-shadow: var(--shadow-md);
-      border: 1px solid rgba(56, 74, 66, 0.08);
-    }
-
-    .msg.user .msg-body {
-      background: linear-gradient(135deg, #fff2e2, #ffe7cb);
-      color: #4d3215;
-    }
-
-    .msg.bot .msg-body {
-      background: rgba(255, 255, 255, 0.88);
-    }
-
-    .msg-body p {
-      margin: 0 0 10px;
-    }
-
-    .msg-body p:last-child {
-      margin-bottom: 0;
-    }
-
-    .msg-body h1,
-    .msg-body h2,
-    .msg-body h3,
-    .msg-body h4 {
-      margin: 12px 0 8px;
-      line-height: 1.35;
-    }
-
-    .msg-body ul,
-    .msg-body ol {
-      margin: 6px 0 10px 20px;
-      padding: 0;
-    }
-
-    .msg-body li {
-      margin: 4px 0;
-    }
-
-    .msg-body blockquote {
-      margin: 10px 0;
-      padding: 8px 12px;
-      border-left: 3px solid rgba(25, 95, 74, 0.36);
-      background: rgba(25, 95, 74, 0.05);
-      color: #33453d;
-      border-radius: 0 12px 12px 0;
-    }
-
-    .msg-body code {
-      font-family: "JetBrains Mono", "Consolas", monospace;
-      background: rgba(25, 95, 74, 0.08);
-      border: 1px solid rgba(25, 95, 74, 0.08);
-      border-radius: 7px;
-      padding: 1px 5px;
-      font-size: 13px;
-    }
-
-    .msg-body pre {
-      margin: 10px 0;
-      padding: 12px;
-      border-radius: 14px;
-      background: #eef5f1;
-      overflow: auto;
-    }
-
-    .msg-body pre code {
-      padding: 0;
-      border: none;
-      background: none;
-    }
-
-    .msg-body a {
-      color: #0f6951;
-      font-weight: 700;
-    }
-
-    .composer-shell {
-      padding-bottom: 2px;
-    }
-
-    .composer-card {
-      border-radius: var(--radius-xl);
-      padding: 20px;
-    }
-
-    .field-label {
-      display: inline-block;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    textarea {
-      width: 100%;
-      border: 1px solid rgba(56, 74, 66, 0.12);
-      border-radius: 18px;
-      padding: 14px 16px;
-      background: rgba(255, 255, 255, 0.92);
-      color: var(--ink);
-      outline: none;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
-      font-size: 15px;
-      font-family: inherit;
-    }
-
-    textarea {
-      min-height: 118px;
-      max-height: 220px;
-      resize: none;
-      line-height: 1.7;
-    }
-
-    textarea:focus {
-      border-color: rgba(25, 95, 74, 0.42);
-      box-shadow: 0 0 0 4px rgba(25, 95, 74, 0.1);
-      transform: translateY(-1px);
-    }
-
-    .field-stack {
-      display: grid;
-      gap: 10px;
-      align-content: start;
-    }
-
-    .toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      border-radius: 14px;
-      padding: 11px 12px;
-      background: rgba(25, 95, 74, 0.07);
-      color: #264237;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .toggle input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--emerald);
-    }
-
-    .hint {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.65;
-    }
-
-    .composer-actions {
-      margin-top: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-
-    .send-btn {
-      appearance: none;
-      border: none;
-      border-radius: 18px;
-      padding: 14px 18px;
-      min-width: 146px;
-      background: linear-gradient(135deg, #1d7259, #133f33);
-      color: #fff;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 16px 32px rgba(25, 95, 74, 0.26);
-      transition: transform 0.18s ease, opacity 0.18s ease;
-    }
-
-    .send-btn:hover:not(:disabled) {
-      transform: translateY(-1px);
-    }
-
-    .send-btn:disabled {
-      cursor: wait;
-      opacity: 0.72;
-    }
-
-    @keyframes rise {
-      from {
-        transform: translateY(8px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    @media (max-width: 1240px) {
-      .app-shell {
-        grid-template-columns: 1fr;
-        overflow: auto;
-      }
-
-      .conversation {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 760px) {
-      body {
-        overflow: auto;
-      }
-
-      .app-shell {
-        padding: 14px;
-        gap: 14px;
-      }
-
-      .hero-card,
-      .panel,
-      .messages-panel,
-      .composer-card,
-      .topbar {
-        border-radius: 22px;
-      }
-
-      .hero-card h1,
-      .empty-state h3 {
-        font-size: 28px;
-      }
-
-      .topbar {
-        display: grid;
-        justify-content: stretch;
-      }
-
-      .composer-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .msg {
-        max-width: 100%;
-      }
-
-      .topbar-nav {
-        gap: 8px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/theme.css" />
 </head>
-<body>
+<body class="chat-page">
   <div class="backdrop one"></div>
   <div class="backdrop two"></div>
   <div class="backdrop three"></div>
@@ -696,19 +14,17 @@
   <main class="app-shell">
     <aside class="rail">
       <section class="hero-card">
-        <p class="eyebrow">BIT FRESHMAN AI DESK</p>
-        <h1>北理工新生助手</h1>
-        <p class="hero-copy">输入问题后，系统会整理相关信息并生成最终回答。</p>
+        <p class="eyebrow">智能问答</p>
+        <h1>北理新生助手</h1>
+        <p class="hero-copy">报到、住宿、选课和校园生活问题，都可以直接从这里开始提问。</p>
         <div class="badge-row">
-          <span id="modeBadge" class="badge badge-primary">等待提问</span>
-          <span class="badge">校园问答</span>
+          <span id="modeBadge" class="status-pill is-idle">准备就绪</span>
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel quick-panel">
         <div class="panel-head">
-          <h2>快速提问</h2>
-          <span class="panel-tag">示例</span>
+          <h2>常见问题</h2>
         </div>
         <div class="prompt-grid">
           <button class="prompt-chip" type="button" data-prompt="北理工奖学金主要类型和申请建议有哪些？">奖学金申请</button>
@@ -722,8 +38,8 @@
     <section class="workspace">
       <header class="topbar">
         <div>
-          <h2 class="topbar-title">AI 问答</h2>
-          <p class="topbar-copy">直接提问即可，系统会整理可用信息并给出回答。</p>
+          <h2 class="topbar-title">智能问答</h2>
+          <p class="topbar-copy">直接提问，或先从左侧常见问题开始。</p>
         </div>
         <nav class="topbar-nav">
           <a class="top-link" href="/">返回主页</a>
@@ -734,30 +50,29 @@
       </header>
 
       <section class="conversation">
-        <section class="messages-panel">
+        <section class="messages-panel chat-messages-panel">
           <div class="panel-head">
             <div>
-              <h2>对话区</h2>
-              <p id="strategyNote" class="topbar-copy">提问后会整理相关信息并生成回答。</p>
+              <h2>本轮回答</h2>
+              <p id="strategyNote" class="topbar-copy">回答会结合可用信息整理成完整回复。</p>
             </div>
-            <span id="statusPill" class="status-pill is-idle">待命</span>
+            <span id="statusPill" class="status-pill is-idle">可开始</span>
           </div>
           <section id="messages" class="messages">
             <div id="emptyState" class="empty-state">
-              <p class="empty-kicker">START HERE</p>
-              <h3>直接提问即可，我会整理相关信息并给出回答。</h3>
-              <p>页面只显示最终回答；新消息会自动滚动到底部。</p>
+              <h3>发出问题后，这里会显示本轮回答。</h3>
+              <p>如果回答引用了网页或来源链接，也会一并保留。</p>
             </div>
           </section>
         </section>
       </section>
 
       <section class="composer-shell">
-        <div class="composer-card">
+        <div class="composer-card chat-composer">
           <label class="field-label" for="input">你的问题</label>
-          <textarea id="input" placeholder="例如：北京理工大学奖学金申请条件有哪些？按 Enter 发送，Shift+Enter 换行。"></textarea>
+          <textarea id="input" placeholder="例如：北京理工大学奖学金申请条件有哪些？Enter 发送，Shift+Enter 换行。"></textarea>
           <div class="composer-actions">
-            <span class="hint">支持直接提问；回答中会保留最终引用到的链接。</span>
+            <span class="hint">可直接继续追问；回答中会保留引用到的链接。</span>
             <button id="sendBtn" class="send-btn" type="button">发送问题</button>
           </div>
         </div>
@@ -902,17 +217,18 @@
 
     function setStatus(kind, note) {
       const map = {
-        idle: { badge: '等待提问', pill: '待命', className: 'is-idle' },
+        idle: { badge: '准备就绪', pill: '可开始', className: 'is-idle' },
         loading: { badge: '正在整理', pill: '处理中', className: 'is-active' },
         web: { badge: '回答已生成', pill: '已完成', className: 'is-active' },
         kb: { badge: '回答已生成', pill: '已完成', className: 'is-idle' },
-        error: { badge: '请求失败', pill: '失败', className: 'is-warn' }
+        error: { badge: '本轮失败', pill: '请重试', className: 'is-warn' }
       };
       const state = map[kind] || map.idle;
       modeBadgeEl.textContent = state.badge;
+      modeBadgeEl.className = `status-pill ${state.className}`;
       statusPillEl.textContent = state.pill;
       statusPillEl.className = `status-pill ${state.className}`;
-      strategyNoteEl.textContent = note || '提问后会整理相关信息并生成回答。';
+      strategyNoteEl.textContent = note || '回答会结合可用信息整理成完整回复。';
     }
 
     function addMessage(role, text) {
@@ -980,11 +296,11 @@
         const data = await res.json();
         setStatus(
           data.mode === 'kb' ? 'kb' : 'web',
-          '已生成回答。'
+          '已整理完成，可继续追问。'
         );
         addMessage('bot', data.answer || '抱歉，暂时无法回答这个问题。');
       } catch (err) {
-        setStatus('error', '本轮请求失败，未能完成搜索或生成。');
+        setStatus('error', '本轮请求失败，请稍后再试。');
         addMessage('bot', '网络异常，请稍后再试。');
       } finally {
         setLoadingState(false);
@@ -1013,7 +329,7 @@
       });
     });
 
-    setStatus('idle', '提问后会整理相关信息并生成回答。');
+    setStatus('idle', '回答会结合可用信息整理成完整回复。');
   </script>
 </body>
 </html>

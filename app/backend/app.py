@@ -44,4 +44,5 @@ register_feature3_routes(app)
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "5000"))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    debug_mode = os.getenv("FLASK_DEBUG", os.getenv("FLASK_ENV", "")).strip().lower() in {"1", "true", "yes", "development"}
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)

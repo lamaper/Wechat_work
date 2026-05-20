@@ -1,1 +1,1 @@
-{"ready": true, "backend": "lexical", "doc_count": 130, "updated_at": 1779110496, "error": "KB_FORCE_LEXICAL enabled"}
+{"ready": true, "backend": "hybrid", "doc_count": 1064, "updated_at": 1779257122, "error": "", "warning": "", "data_signature": "9143287a7f4623738766b04d54b3df90c3685b53", "vector_backend": "char_tfidf_svd"}

@@ -6,13 +6,13 @@ import ipaddress
 import html
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, List, Optional, Tuple
-from urllib.parse import quote_plus, unquote, urlparse, urlunparse
+from urllib.parse import parse_qs, quote_plus, unquote, urlparse, urlunparse
 from urllib.robotparser import RobotFileParser
 
 import requests
 from bs4 import BeautifulSoup
 
-from modules.shared.paths import BACKEND_ROOT
+from modules.ai.official_sites import get_official_site_host_sets
 from modules.shared.text_utils import char_ngrams, normalize_text
 
 FETCH_TIMEOUT = float(os.getenv("WEB_FETCH_TIMEOUT", "8"))
@@ -28,6 +28,8 @@ WEB_SEARCH_ENABLED = os.getenv("WEB_SEARCH_ENABLED", "1").strip().lower() in {"1
 WEB_SEARCH_TIMEOUT = float(os.getenv("WEB_SEARCH_TIMEOUT", str(FETCH_TIMEOUT)))
 WEB_SEARCH_MAX_RESULTS = max(1, int(os.getenv("WEB_SEARCH_MAX_RESULTS", "6")))
 WEB_SEARCH_FETCH_LIMIT = max(1, int(os.getenv("WEB_SEARCH_FETCH_LIMIT", str(MAX_FETCH_URLS))))
+WEB_FETCH_CONCURRENCY = max(1, int(os.getenv("WEB_FETCH_CONCURRENCY", str(WEB_SEARCH_MAX_RESULTS))))
+ROBOTS_FETCH_TIMEOUT = max(0.5, float(os.getenv("WEB_FETCH_ROBOTS_TIMEOUT", "2")))
 SEARCH_USER_AGENT = os.getenv("WEB_SEARCH_USER_AGENT", USER_AGENT)
 if SEARCH_USER_AGENT == USER_AGENT:
     SEARCH_USER_AGENT = (
@@ -35,13 +37,18 @@ if SEARCH_USER_AGENT == USER_AGENT:
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/124.0.0.0 Safari/537.36"
     )
+SEARCH_HEADERS = {
+    "User-Agent": SEARCH_USER_AGENT,
+    "Accept-Language": os.getenv("WEB_SEARCH_ACCEPT_LANGUAGE", "zh-CN,zh;q=0.9,en;q=0.8"),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+}
 WEB_SEARCH_DUCKDUCKGO_URL = os.getenv("WEB_SEARCH_DUCKDUCKGO_URL", "https://duckduckgo.com/html/?q={query}")
-WEB_SEARCH_SO360_URL = os.getenv("WEB_SEARCH_SO360_URL", "https://m.so.com/s?q={query}")
-WEB_SEARCH_BAIDU_URL = os.getenv("WEB_SEARCH_BAIDU_URL", "https://m.baidu.com/s?word={query}")
+WEB_SEARCH_SO360_URL = os.getenv("WEB_SEARCH_SO360_URL", "https://www.so.com/s?q={query}")
+WEB_SEARCH_BAIDU_URL = os.getenv("WEB_SEARCH_BAIDU_URL", "https://www.baidu.com/s?wd={query}")
 
 VALID_CANDIDATE_URL_PATTERN = re.compile(r'^https?://[^\s"\'>]+')
 _ROBOTS_CACHE: Dict[str, Tuple[float, RobotFileParser]] = {}
-_SITE_CATALOG_CACHE: Optional[Dict[str, object]] = None
+_SEARCH_REDIRECT_CACHE: Dict[str, str] = {}
 _BLOCKED_HOSTS = {"localhost", "0.0.0.0", "127.0.0.1", "::1"}
 _LOW_TRUST_HOST_SUFFIXES = (
     ".zhihu.com",
@@ -62,64 +69,131 @@ _SEARCH_PROVIDER_HOST_SUFFIXES = (
 )
 _SEARCH_PROVIDER_CONTENT_HOSTS = {
     "baike.baidu.com",
+    "baijiahao.baidu.com",
+    "haokan.baidu.com",
+    "jingyan.baidu.com",
+    "mbd.baidu.com",
     "quanmin.baidu.com",
     "tieba.baidu.com",
+    "baike.so.com",
+    "m.map.360.cn",
+    "map.360.cn",
+    "wenku.so.com",
 }
 _QUERY_STOPWORDS = (
     "北京理工大学",
     "北理工",
     "有哪些",
     "什么",
+    "是谁",
+    "谁",
     "怎么",
     "哪个",
     "哪家",
+    "哪几个",
+    "几家",
     "推荐",
+    "呀",
+    "啊",
+    "的",
+    "是",
     "介绍",
     "一下",
     "好吃的",
     "好吃",
     "吗",
     "呢",
-    "呀",
-    "啊",
-    "的",
 )
-OFFICIAL_URL_ALLOWLIST_PATH = BACKEND_ROOT / "official_url_allowlist.json"
+_BIT_QUERY_TERMS = (
+    "北京理工大学",
+    "北理工",
+    "bit.edu.cn",
+    "迎新",
+    "新生",
+    "报到",
+    "宿舍",
+    "校区",
+    "校园",
+    "校园卡",
+    "校园网",
+    "教务",
+    "选课",
+    "奖学金",
+    "军训",
+    "学号",
+    "研究生院",
+    "本科生院",
+    "良乡",
+    "中关村",
+)
+_BIT_CONTEXT_TERMS = (
+    "食堂",
+    "图书馆",
+    "校医院",
+    "辅导员",
+    "宿管",
+    "快递",
+    "统一身份",
+    "统一身份认证",
+    "智慧北理",
+    "webvpn",
+    "vpn",
+    "一卡通",
+    "校历",
+    "缓考",
+    "转专业",
+    "绩点",
+    "保研",
+    "社团",
+    "后勤",
+    "绿色通道",
+    "助学金",
+    "助学贷款",
+    "勤工助学",
+    "资助",
+)
+_OTHER_UNIVERSITY_MARKERS = (
+    "北京大学",
+    "北大",
+    "清华大学",
+    "清华",
+    "中国人民大学",
+    "人大",
+    "北京航空航天大学",
+    "北航",
+    "北京师范大学",
+    "北师大",
+    "中国传媒大学",
+    "中传",
+    "复旦大学",
+    "上海交通大学",
+    "浙大",
+    "浙江大学",
+    "南京大学",
+    "武汉大学",
+    "哈尔滨工业大学",
+    "哈工大",
+    "同济大学",
+)
+
+_SUBJECTIVE_WEB_QUERY_TERMS = (
+    "好吃",
+    "推荐",
+    "体验",
+    "怎么样",
+    "口碑",
+    "值得",
+    "攻略",
+    "美食",
+)
+
 ROBOTS_CACHE_MAX_SIZE = max(16, int(os.getenv("WEB_FETCH_ROBOTS_CACHE_MAX_SIZE", "128")))
-
-
-def _load_site_catalog() -> Dict[str, object]:
-    global _SITE_CATALOG_CACHE
-    if _SITE_CATALOG_CACHE is not None:
-        return _SITE_CATALOG_CACHE
-
-    catalog: Dict[str, object] = {"preferred_hosts": set(), "restricted_hosts": set()}
-    try:
-        raw = json.loads(OFFICIAL_URL_ALLOWLIST_PATH.read_text(encoding="utf-8"))
-        preferred_hosts = {
-            _normalize_host(str(item.get("host") or ""))
-            for item in (raw.get("sites") or [])
-            if isinstance(item, dict) and str(item.get("host") or "").strip()
-        }
-        restricted_hosts = {
-            _normalize_host(str(item.get("host") or ""))
-            for item in (raw.get("restricted_sites") or [])
-            if isinstance(item, dict) and str(item.get("host") or "").strip()
-        }
-        catalog = {
-            "preferred_hosts": {host for host in preferred_hosts if host},
-            "restricted_hosts": {host for host in restricted_hosts if host},
-        }
-    except Exception:
-        catalog = {"preferred_hosts": set(), "restricted_hosts": set()}
-
-    _SITE_CATALOG_CACHE = catalog
-    return catalog
+SEARCH_REDIRECT_TIMEOUT = max(1.0, float(os.getenv("WEB_SEARCH_REDIRECT_TIMEOUT", "4")))
 
 
 def _is_restricted_host(host: str) -> bool:
     normalized = _normalize_host(host)
-    restricted_hosts = _load_site_catalog().get("restricted_hosts") or set()
+    restricted_hosts = get_official_site_host_sets().get("restricted_hosts") or set()
     return normalized in restricted_hosts
 
 
@@ -127,8 +201,27 @@ def _is_preferred_official_host(host: str) -> bool:
     normalized = _normalize_host(host)
     if not normalized or _is_restricted_host(normalized):
         return False
-    preferred_hosts = _load_site_catalog().get("preferred_hosts") or set()
+    preferred_hosts = get_official_site_host_sets().get("preferred_hosts") or set()
     return normalized in preferred_hosts or normalized.endswith(".bit.edu.cn") or normalized == "bit.edu.cn"
+
+
+def _is_authoritative_public_host(host: str) -> bool:
+    normalized = _normalize_host(host)
+    if not normalized:
+        return False
+    return (
+        _is_preferred_official_host(normalized)
+        or normalized.endswith(".edu.cn")
+        or normalized.endswith(".edu")
+        or normalized.endswith(".gov.cn")
+    )
+
+
+def _should_keep_third_party_web_results(question: str) -> bool:
+    normalized_question = normalize_text(question, compact=True)
+    if not normalized_question:
+        return False
+    return any(token in normalized_question for token in _SUBJECTIVE_WEB_QUERY_TERMS)
 
 
 def _prune_robots_cache(now: float) -> None:
@@ -194,11 +287,21 @@ def _get_robot_parser(url: str) -> RobotFileParser:
         return cached[1]
 
     parser = RobotFileParser()
-    parser.set_url(f"{base}/robots.txt")
+    robots_url = f"{base}/robots.txt"
+    parser.set_url(robots_url)
     try:
-        parser.read()
-    except Exception:
-        pass
+        response = requests.get(
+            robots_url,
+            headers={"User-Agent": USER_AGENT},
+            timeout=ROBOTS_FETCH_TIMEOUT,
+            allow_redirects=True,
+        )
+        if response.status_code >= 400:
+            parser.allow_all = True
+        else:
+            parser.parse(_decode_response_text(response).splitlines())
+    except requests.RequestException:
+        parser.allow_all = True
     _ROBOTS_CACHE[base] = (now, parser)
     return parser
 
@@ -375,14 +478,15 @@ def fetch_public_web_url(url: str, title: str = "", snippet: str = "") -> Dict:
 def build_web_reference(results: List[Dict]) -> str:
     parts = []
     for item in results:
-        if not item.get("ok"):
+        if not item.get("ok") and not item.get("search_only"):
             continue
         title = str(item.get("title") or item.get("final_url") or item.get("url") or "网页")
         final_url = str(item.get("final_url") or item.get("url") or "")
-        excerpt = str(item.get("excerpt") or item.get("text") or "").strip()
+        excerpt = str(item.get("excerpt") or item.get("search_snippet") or item.get("text") or "").strip()
         if len(excerpt) > 480:
             excerpt = excerpt[:480].rstrip() + "..."
-        parts.append(f"(网页来源:{title} url:{final_url}) {excerpt}")
+        source_label = "搜索摘要" if item.get("search_only") and not item.get("ok") else "网页来源"
+        parts.append(f"({source_label}:{title} url:{final_url}) {excerpt}")
     return "\n\n".join(parts)
 
 
@@ -390,23 +494,79 @@ def format_web_sources_markdown(results: List[Dict]) -> str:
     lines = ["### 本次访问网址"]
     seen = set()
     for item in results:
-        if not item.get("ok"):
+        if not item.get("ok") and not item.get("search_only"):
             continue
         url = str(item.get("final_url") or item.get("url") or "")
         if not url or url in seen:
             continue
         seen.add(url)
         title = str(item.get("title") or item.get("site", {}).get("name") or url)
-        lines.append(f"- [{title}]({url})")
+        suffix = "（搜索摘要）" if item.get("search_only") and not item.get("ok") else ""
+        lines.append(f"- [{title}]({url}){suffix}")
     return "\n".join(lines) if len(lines) > 1 else ""
+
+
+def looks_like_bit_query(question: str) -> bool:
+    query = re.sub(r"\s+", " ", str(question or "")).strip()
+    if not query:
+        return False
+    normalized = normalize_text(query, compact=True)
+    lowered = query.lower()
+
+    if any(marker in query for marker in _OTHER_UNIVERSITY_MARKERS):
+        return False
+
+    other_school_match = re.search(r"([\u4e00-\u9fff]{2,12}(?:大学|学院))", query)
+    if other_school_match and other_school_match.group(1) != "北京理工大学":
+        return False
+
+    explicit_bit = (
+        "北京理工大学" in query
+        or "北理工" in query
+        or "bit.edu.cn" in lowered
+        or re.search(r"\bbit\b", lowered) is not None
+        or any(term in normalized for term in _BIT_QUERY_TERMS)
+    )
+    if explicit_bit:
+        return True
+
+    return any(term in normalized for term in _BIT_CONTEXT_TERMS)
 
 
 def _build_search_query(question: str) -> str:
     query = re.sub(r"\s+", " ", str(question or "")).strip()
     if not query:
         return ""
-    if not any(token in query for token in ("北京理工大学", "北理工", "bit.edu.cn", "BIT")):
+
+    bit_scoped = looks_like_bit_query(query)
+    normalized_query = normalize_text(query, compact=True)
+    natural_language_query = any(token in normalized_query for token in ("有哪些", "什么", "怎么", "哪个", "是谁", "谁", "吗", "呢", "好吃"))
+    if bit_scoped and not any(token in query for token in ("北京理工大学", "北理工", "bit.edu.cn", "BIT")):
         query = f"北京理工大学 {query}"
+
+    keyword_terms = _query_keyword_terms(query)
+    if not keyword_terms:
+        return query
+
+    concise_terms: List[str] = []
+    seen = set()
+    for term in keyword_terms:
+        cleaned_term = term.strip()
+        if len(cleaned_term) < 2 or cleaned_term in seen:
+            continue
+        seen.add(cleaned_term)
+        concise_terms.append(cleaned_term)
+
+    if any(token in normalized_query for token in ("好吃", "值得吃", "推荐", "美食")) and "推荐" not in concise_terms:
+        concise_terms.append("推荐")
+
+    if not concise_terms:
+        return query
+
+    prefix = "北京理工大学 " if bit_scoped else ""
+    concise_query = f"{prefix}{' '.join(concise_terms[:4])}".strip()
+    if concise_query and (natural_language_query or len(concise_query) + 4 < len(query)):
+        return concise_query
     return query
 
 
@@ -430,6 +590,18 @@ def _is_search_provider_host(host: str) -> bool:
     if normalized in _SEARCH_PROVIDER_CONTENT_HOSTS:
         return False
     return any(normalized == suffix or normalized.endswith(f".{suffix}") for suffix in _SEARCH_PROVIDER_HOST_SUFFIXES)
+
+
+def _is_search_provider_content_url(url: str) -> bool:
+    parsed = urlparse(normalize_url(url))
+    host = _normalize_host(parsed.netloc)
+    return host in _SEARCH_PROVIDER_CONTENT_HOSTS
+
+
+def _is_search_result_redirect_url(url: str) -> bool:
+    parsed = urlparse(normalize_url(url))
+    host = _normalize_host(parsed.netloc)
+    return (host == "www.so.com" and parsed.path == "/link") or (host == "www.baidu.com" and parsed.path == "/link")
 
 
 def _query_keyword_terms(query: str) -> List[str]:
@@ -495,6 +667,11 @@ def _score_search_candidate(title: str, snippet: str, host: str, query: str) -> 
 
 def _clean_candidate_url(raw: str) -> str:
     text = html.unescape(str(raw or "")).replace("\\/", "/").replace("\\", "").strip()
+    if text.startswith("//"):
+        text = f"https:{text}"
+    uddg_match = re.search(r"[?&]uddg=([^&]+)", text)
+    if uddg_match:
+        text = unquote(uddg_match.group(1))
     match = VALID_CANDIDATE_URL_PATTERN.match(text)
     if not match:
         return ""
@@ -507,8 +684,8 @@ def _extract_candidate_urls_from_search_page(text: str) -> List[str]:
     seen = set()
     patterns = [
         r'uddg=([^&\"]+)',
-        r'"mu":"(https?:[^\"]+)"',
-        r'"showurl":"(https?:[^\"]+)"',
+        r'"mu":"([^\"]+)"',
+        r'"showurl":"([^\"]+)"',
         r'https?://[^\s\"\'>]+',
     ]
 
@@ -521,6 +698,175 @@ def _extract_candidate_urls_from_search_page(text: str) -> List[str]:
             candidates.append(href)
 
     return candidates
+
+
+def _append_clean_candidate_url(candidates: List[str], seen: set, raw: str) -> None:
+    href = _clean_candidate_url(unquote(str(raw or "")))
+    if not href or href in seen:
+        return
+    seen.add(href)
+    candidates.append(href)
+
+
+def _collect_candidate_urls_from_json_blob(raw: str) -> List[str]:
+    decoded = html.unescape(str(raw or "")).replace("\\/", "/").strip()
+    if not decoded:
+        return []
+
+    candidates: List[str] = []
+    seen = set()
+
+    def walk(value) -> None:
+        if isinstance(value, dict):
+            for key, item in value.items():
+                lowered = str(key or "").lower()
+                if lowered in {"url", "mu", "pageurl", "originurl", "oriurl", "rawurl", "targeturl"}:
+                    _append_clean_candidate_url(candidates, seen, item)
+                elif isinstance(item, (dict, list)):
+                    walk(item)
+        elif isinstance(value, list):
+            for item in value:
+                walk(item)
+
+    try:
+        loaded = json.loads(decoded)
+    except Exception:
+        loaded = None
+
+    if loaded is not None:
+        walk(loaded)
+
+    if candidates:
+        return candidates
+
+    for pattern in (
+        r'"url"\s*:\s*"([^\"]+)"',
+        r'"mu"\s*:\s*"([^\"]+)"',
+        r'"targeturl"\s*:\s*"([^\"]+)"',
+        r'"originurl"\s*:\s*"([^\"]+)"',
+    ):
+        for match in re.findall(pattern, decoded):
+            _append_clean_candidate_url(candidates, seen, match)
+
+    return candidates
+
+
+def _collect_candidate_urls_from_node(
+    node,
+    direct_attrs: Tuple[str, ...] = (),
+    json_attrs: Tuple[str, ...] = (),
+    descendant_limit: int = 48,
+) -> List[str]:
+    candidates: List[str] = []
+    seen = set()
+    elements = [node]
+    elements.extend(node.find_all(True, limit=descendant_limit))
+
+    for element in elements:
+        for attr_name in direct_attrs:
+            raw_value = element.get(attr_name)
+            if raw_value is None:
+                continue
+            if isinstance(raw_value, list):
+                for item in raw_value:
+                    _append_clean_candidate_url(candidates, seen, item)
+            else:
+                _append_clean_candidate_url(candidates, seen, raw_value)
+
+        for attr_name in json_attrs:
+            raw_value = element.get(attr_name)
+            if not raw_value:
+                continue
+            for href in _collect_candidate_urls_from_json_blob(raw_value):
+                _append_clean_candidate_url(candidates, seen, href)
+
+    return candidates
+
+
+def _pick_best_search_candidate_url(urls: List[str]) -> str:
+    if not urls:
+        return ""
+
+    def priority(url: str) -> int:
+        parsed = urlparse(url)
+        host = _normalize_host(parsed.netloc)
+        score = 0
+        if _is_search_result_redirect_url(url):
+            score -= 40
+        elif _is_search_provider_content_url(url):
+            score += 40
+        elif not _is_search_provider_host(host):
+            score += 30
+        else:
+            score += 10
+        if url.startswith("https://"):
+            score += 2
+        if (parsed.path or "") not in {"", "/"}:
+            score += 1
+        return score
+
+    _, best_url = max(enumerate(urls), key=lambda item: (priority(item[1]), -item[0]))
+    return best_url
+
+
+def _resolve_search_result_redirect_url(url: str) -> str:
+    normalized = normalize_url(url)
+    if not normalized or not _is_search_result_redirect_url(normalized):
+        return normalized
+
+    cached = _SEARCH_REDIRECT_CACHE.get(normalized)
+    if cached:
+        return cached
+
+    resolved = normalized
+    try:
+        response = requests.head(
+            normalized,
+            headers=SEARCH_HEADERS,
+            timeout=min(SEARCH_REDIRECT_TIMEOUT, WEB_SEARCH_TIMEOUT),
+            allow_redirects=True,
+        )
+        candidate = normalize_url(response.url)
+        if candidate:
+            resolved = candidate
+    except requests.RequestException:
+        pass
+
+    if resolved == normalized:
+        try:
+            response = requests.get(
+                normalized,
+                headers=SEARCH_HEADERS,
+                timeout=min(SEARCH_REDIRECT_TIMEOUT, WEB_SEARCH_TIMEOUT),
+                allow_redirects=True,
+                stream=True,
+            )
+            candidate = normalize_url(response.url)
+            response.close()
+            if candidate:
+                resolved = candidate
+        except requests.RequestException:
+            pass
+
+    _SEARCH_REDIRECT_CACHE[normalized] = resolved
+    return resolved
+
+
+def _clean_search_candidate_text(text: str) -> str:
+    return re.sub(r"\s+", " ", str(text or "")).strip()
+
+
+def _build_search_candidate(title: str, url: str, snippet: str, rank: int) -> Optional[Dict]:
+    cleaned_title = _clean_search_candidate_text(title)
+    cleaned_url = _clean_candidate_url(url)
+    if len(cleaned_title) < 4 or not cleaned_url:
+        return None
+    return {
+        "title": cleaned_title,
+        "url": cleaned_url,
+        "snippet": _clean_search_candidate_text(snippet),
+        "rank": rank,
+    }
 
 
 def _extract_search_candidates_from_duckduckgo(text: str) -> List[Dict]:
@@ -548,29 +894,88 @@ def _extract_search_candidates_from_duckduckgo(text: str) -> List[Dict]:
 def _extract_search_candidates_from_baidu(text: str) -> List[Dict]:
     soup = BeautifulSoup(text or "", "html.parser")
     results: List[Dict] = []
-    for rank, node in enumerate(soup.select(".c-result, .result"), start=1):
-        data_log = str(node.get("data-log") or "")
-        match = re.search(r'"mu":"(https?:[^\"]+)"', data_log)
-        if not match:
+    seen = set()
+    for node in soup.select("div.c-container[tpl], div.result-op.c-container[tpl]"):
+        title_link = node.select_one("h3 a")
+        if not title_link:
             continue
-        href = _clean_candidate_url(unquote(match.group(1)))
-        if not href:
+        title = _clean_search_candidate_text(title_link.get_text(" ", strip=True))
+        if len(title) < 4:
             continue
-        title_node = node.select_one("h3, h3 a, a")
-        title = re.sub(r"\s+", " ", title_node.get_text(" ", strip=True)) if title_node else ""
-        snippet = re.sub(r"\s+", " ", node.get_text(" ", strip=True))
-        results.append({
-            "title": title or _normalize_host(urlparse(href).netloc),
-            "url": href,
-            "snippet": snippet,
-            "rank": rank,
-        })
+
+        href = _pick_best_search_candidate_url(
+            _collect_candidate_urls_from_node(
+                node,
+                direct_attrs=("mu", "data-url", "data-landurl", "data-mdurl", "href"),
+                json_attrs=("data-feedback", "data-ext"),
+            )
+        )
+        if not href or href in seen:
+            continue
+
+        snippet = _clean_search_candidate_text(node.get_text(" ", strip=True))
+        seen.add(href)
+        candidate = _build_search_candidate(title or _normalize_host(urlparse(href).netloc), href, snippet, len(results) + 1)
+        if candidate:
+            results.append(candidate)
+
+    if results:
+        return results
+
+    for rank, raw_href in enumerate(re.findall(r'"mu":"([^\"]+)"', text or ""), start=1):
+        href = _clean_candidate_url(unquote(raw_href))
+        if not href or href in seen:
+            continue
+        seen.add(href)
+        results.append(
+            {
+                "title": _normalize_host(urlparse(href).netloc),
+                "url": href,
+                "snippet": href,
+                "rank": rank,
+            }
+        )
+    return results
+
+
+def _extract_search_candidates_from_so360(text: str) -> List[Dict]:
+    soup = BeautifulSoup(text or "", "html.parser")
+    results: List[Dict] = []
+    seen = set()
+
+    for node in soup.select("li.res-list"):
+        link = node.select_one("h3.res-title a")
+        if not link:
+            continue
+        href = _pick_best_search_candidate_url(
+            _collect_candidate_urls_from_node(
+                node,
+                direct_attrs=("data-mdurl", "href"),
+                json_attrs=(),
+            )
+        )
+        if not href or href in seen:
+            continue
+
+        title = _clean_search_candidate_text(link.get_text(" ", strip=True))
+        if len(title) < 4:
+            continue
+
+        snippet = _clean_search_candidate_text(node.get_text(" ", strip=True))
+        seen.add(href)
+        candidate = _build_search_candidate(title, href, snippet, len(results) + 1)
+        if candidate:
+            results.append(candidate)
     return results
 
 
 def _extract_search_candidates(provider: str, text: str) -> List[Dict]:
     if provider == "duckduckgo":
         parsed = _extract_search_candidates_from_duckduckgo(text)
+        if parsed:
+            return parsed
+    if provider == "so360":
+        parsed = _extract_search_candidates_from_so360(text)
         if parsed:
             return parsed
     if provider == "baidu":
@@ -595,15 +1000,33 @@ def _fetch_search_provider(provider: str, search_url: str) -> Dict:
     try:
         response = requests.get(
             search_url,
-            headers={"User-Agent": SEARCH_USER_AGENT},
+            headers=SEARCH_HEADERS,
             timeout=WEB_SEARCH_TIMEOUT,
             allow_redirects=True,
         )
         response.raise_for_status()
+        decoded_text = _decode_response_text(response)
+        if provider == "baidu" and (
+            "wappass.baidu.com/static/captcha/" in str(response.url)
+            or any(token in decoded_text for token in ("请输入以下验证码", "百度安全验证", "网络不给力，请稍后重试"))
+        ):
+            return {
+                "provider": provider,
+                "search_url": search_url,
+                "candidates": [],
+                "error": "触发 Baidu 验证码页",
+            }
+        if provider == "so360" and "qcaptcha.so.com" in str(response.url) and "访问异常页面" in decoded_text:
+            return {
+                "provider": provider,
+                "search_url": search_url,
+                "candidates": [],
+                "error": "触发 360 验证码页",
+            }
         return {
             "provider": provider,
             "search_url": search_url,
-            "candidates": _extract_search_candidates(provider, _decode_response_text(response)),
+            "candidates": _extract_search_candidates(provider, decoded_text),
             "error": "",
         }
     except Exception as exc:
@@ -637,7 +1060,6 @@ def search_public_web(question: str) -> Dict:
     seen = set()
     enough_candidates_threshold = max(WEB_SEARCH_MAX_RESULTS, WEB_SEARCH_FETCH_LIMIT * 2)
     providers = {
-        "duckduckgo": WEB_SEARCH_DUCKDUCKGO_URL.format(query=quote_plus(query)),
         "so360": WEB_SEARCH_SO360_URL.format(query=quote_plus(query)),
         "baidu": WEB_SEARCH_BAIDU_URL.format(query=quote_plus(query)),
     }
@@ -668,28 +1090,40 @@ def search_public_web(question: str) -> Dict:
             if not href or href in seen:
                 continue
 
-            host = _normalize_host(urlparse(href).netloc)
-            if not host or "." not in host or _is_search_provider_host(host):
+            candidate_url = _resolve_search_result_redirect_url(href) if _is_search_result_redirect_url(href) else href
+            candidate_host = _normalize_host(urlparse(candidate_url).netloc)
+            if not candidate_host or "." not in candidate_host or (_is_search_provider_host(candidate_host) and not _is_search_result_redirect_url(candidate_url) and not _is_search_provider_content_url(candidate_url)):
                 continue
-            if _is_restricted_host(host):
+            if _is_restricted_host(candidate_host):
                 continue
 
-            safe, _ = is_safe_public_url(href)
+            safe, _ = is_safe_public_url(candidate_url)
             if not safe:
                 continue
 
-            title = str(item.get("title") or host)
-            snippet = str(item.get("snippet") or href)
-            score = _score_search_candidate(title, snippet, host, query)
+            title = str(item.get("title") or candidate_host)
+            snippet = str(item.get("snippet") or candidate_url)
+            score = _score_search_candidate(
+                title,
+                snippet,
+                "" if (_is_search_result_redirect_url(candidate_url) and not _is_search_provider_content_url(candidate_url)) else candidate_host,
+                query,
+            )
+            if _is_search_result_redirect_url(candidate_url):
+                score += 12
+            if _is_search_provider_content_url(candidate_url):
+                score += 6
+            if candidate_url != href and not _is_search_result_redirect_url(candidate_url):
+                score += 8
             if score < 20:
                 continue
 
-            seen.add(href)
+            seen.add(candidate_url)
             candidates.append(
                 {
                     "title": title,
-                    "url": href,
-                    "host": host,
+                    "url": candidate_url,
+                    "host": candidate_host,
                     "snippet": snippet,
                     "rank": int(item.get("rank") or (len(candidates) + 1)),
                     "score": score,
@@ -705,7 +1139,7 @@ def search_public_web(question: str) -> Dict:
     candidates.sort(key=lambda item: (-int(item.get("score") or 0), int(item.get("rank") or 0)))
     preferred_results = [item for item in candidates if _is_preferred_official_host(str(item.get("host") or ""))]
     other_results = [item for item in candidates if not _is_preferred_official_host(str(item.get("host") or ""))]
-    top_results = preferred_results[:WEB_SEARCH_MAX_RESULTS] if preferred_results else other_results[:WEB_SEARCH_MAX_RESULTS]
+    top_results = (preferred_results + other_results)[:WEB_SEARCH_MAX_RESULTS]
     steps.append({"stage": "web_search", "ok": True, "message": f"全网搜索获得 {len(top_results)} 个候选网页", "url": ""})
     return {"query": query, "results": top_results, "steps": steps}
 
@@ -726,27 +1160,93 @@ def search_and_fetch_public_web(question: str, exclude_hosts: Optional[List[str]
         steps.append({"stage": "web_search", "ok": False, "message": "没有可抓取的全网候选网页", "url": ""})
         return {"query": search_bundle.get("query") or "", "results": [], "steps": steps}
 
-    steps.append({"stage": "web_search", "ok": True, "message": f"准备抓取候选网页，目标获取 {min(WEB_SEARCH_FETCH_LIMIT, len(candidates))} 个有效结果", "url": ""})
+    subjective_query = _should_keep_third_party_web_results(question)
+    if subjective_query:
+        authoritative_candidates = [item for item in candidates if _is_authoritative_public_host(str(item.get("host") or ""))]
+        fetch_plan = authoritative_candidates[: min(2, len(authoritative_candidates))]
+        if not fetch_plan:
+            fetch_plan = candidates[: min(len(candidates), WEB_SEARCH_FETCH_LIMIT)]
+    else:
+        fetch_plan = candidates[: min(len(candidates), max(WEB_SEARCH_FETCH_LIMIT * 2, WEB_SEARCH_FETCH_LIMIT))]
+    steps.append({"stage": "web_search", "ok": True, "message": f"准备并行抓取候选网页，目标获取 {min(WEB_SEARCH_FETCH_LIMIT, len(fetch_plan))} 个有效结果", "url": ""})
     fetched_results: List[Dict] = []
     success_count = 0
-    for item in candidates:
-        fetched = fetch_public_web_url(
-            str(item.get("url") or ""),
-            title=str(item.get("title") or ""),
-            snippet=str(item.get("snippet") or ""),
-        )
+    consumed_urls = {str(item.get("url") or "") for item in fetch_plan if item.get("url")}
+    ordered_fetches: List[Tuple[int, Dict, Dict]] = []
+
+    with ThreadPoolExecutor(max_workers=min(WEB_FETCH_CONCURRENCY, len(fetch_plan) or 1)) as executor:
+        future_map = {
+            executor.submit(
+                fetch_public_web_url,
+                str(item.get("url") or ""),
+                title=str(item.get("title") or ""),
+                snippet=str(item.get("snippet") or ""),
+            ): (index, item)
+            for index, item in enumerate(fetch_plan)
+        }
+        for future in as_completed(future_map):
+            index, item = future_map[future]
+            fetched = future.result()
+            ordered_fetches.append((index, item, fetched))
+
+    ordered_fetches.sort(key=lambda entry: entry[0])
+    for _, item, fetched in ordered_fetches:
         if fetched.get("ok"):
             fetched["search_rank"] = item.get("rank")
             fetched["search_score"] = item.get("score")
+            fetched["search_snippet"] = str(item.get("snippet") or "")
+            if success_count >= WEB_SEARCH_FETCH_LIMIT:
+                steps.extend(fetched.get("steps") or [])
+                continue
             success_count += 1
         fetched_results.append(fetched)
         steps.extend(fetched.get("steps") or [])
-        if success_count >= WEB_SEARCH_FETCH_LIMIT:
-            break
+
+    supplemental_results: List[Dict] = []
+    if success_count < WEB_SEARCH_FETCH_LIMIT:
+        for item in candidates:
+            url = str(item.get("url") or "")
+            snippet = re.sub(r"\s+", " ", str(item.get("snippet") or "")).strip()
+            if not url or url in consumed_urls or len(snippet) < MIN_WEB_CONTENT_LENGTH:
+                continue
+            supplemental_results.append(
+                {
+                    "ok": False,
+                    "search_only": True,
+                    "url": url,
+                    "final_url": url,
+                    "title": str(item.get("title") or url),
+                    "site": {"name": str(item.get("title") or url), "host": str(item.get("host") or "")},
+                    "excerpt": snippet[:360],
+                    "search_snippet": snippet,
+                    "search_score": item.get("score"),
+                    "search_rank": item.get("rank"),
+                    "steps": [],
+                }
+            )
+            if len(supplemental_results) >= 2:
+                break
+
+    all_results = fetched_results + supplemental_results
+    authoritative_success = any(
+        item.get("ok")
+        and _is_authoritative_public_host(
+            _normalize_host(urlparse(str(item.get("final_url") or item.get("url") or "")).netloc)
+        )
+        for item in all_results
+    )
+    if authoritative_success and not _should_keep_third_party_web_results(question):
+        all_results = [
+            item
+            for item in all_results
+            if _is_authoritative_public_host(
+                _normalize_host(urlparse(str(item.get("final_url") or item.get("url") or "")).netloc)
+            )
+        ]
 
     return {
         "query": search_bundle.get("query") or "",
-        "results": fetched_results,
+        "results": all_results,
         "steps": steps,
     }
 

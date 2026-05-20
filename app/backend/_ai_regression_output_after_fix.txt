@@ -1,0 +1,87 @@
+--- CASE 1 ---
+question=北理工奖学金主要类型和申请建议有哪些？
+status=200 elapsed=3.87s
+mode=kb strategy=rag_then_web kb_score=0.775507390499115
+answer_preview=根据提供的参考知识，北京理工大学奖学金主要类型及申请建议如下：  ### 主要奖学金类型 - **国家奖学金**：8000元/年，面向二年级及以上学生，要求学业成绩突出（通常GPA或专业排名前10%）。 - **国家励志奖学金**：5000元/年，面向二年级及以上且通过家庭经济困难认定的学生，需同时满足成绩要求。 - **学校学业奖学金**：分等级，主要依据学业成绩评定。 - **社会类奖学金**：由企业和校友设立，可能侧重特定专业、生源地或领域，部分可能面向新生开放（名额稀少）。 - **国家助学金**：非奖学金，但新生可申请，需通过家庭经济困难认定，
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.776）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 2 ---
+question=报到当天需要准备哪些材料？
+status=200 elapsed=2.32s
+mode=kb strategy=rag_then_web kb_score=0.7731410562992096
+answer_preview=根据参考知识，报到当天需要准备以下材料：  1. **录取通知书**   2. **身份证**   3. **家庭经济困难相关证明材料**（如申请绿色通道）：包括低保证、建档立卡证明、特困人员救助供养证、残疾证、家庭收入证明、重大疾病诊断书及医疗费用单据等（具体要求以当年资助中心通知为准）。  报到流程中，需出示录取通知书和身份证核验身份；若需办理绿色通道，则需携带上述经济困难证明材料到迎新现场窗口办理。  ### 来源 - 01_报到与入学准备.md (score:0.660) - 04_奖助学金与学生资助.md (score:0.672)
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.773）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 3 ---
+question=北京大学在哪里？
+status=200 elapsed=10.32s
+mode=kb strategy=rag_then_web kb_score=0.0
+answer_preview=暂时不能可靠回答这个问题。  本轮没有抓到可用网页正文，而本地知识库与问题的相关性也不足。为了避免编造，我先不给出结论。  你可以尝试： - 明确写出机构全名、产品名或官方站点名 - 把问题缩小到一个可核验点，例如开放时间、步骤、政策条款 - 稍后重试，或换成更接近官方标题的问法
+step=kb_retrieve ok=False msg=问题不属于北理域，已跳过本地知识库，直接进入网页检索
+step=web_search ok=True msg=已启动全网搜索：北京大学在哪里？
+step=web_search ok=True msg=duckduckgo 提取到 2 个候选网址
+step=web_search ok=False msg=so360 搜索请求失败: HTTPSConnectionPool(host='m.so.com', port=443): Max retries exceeded with url: /s?q=%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=web_search ok=False msg=baidu 搜索请求失败: HTTPSConnectionPool(host='m.baidu.com', port=443): Max retries exceeded with url: /s?word=%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=web_search ok=True msg=全网搜索获得 2 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 2 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+step=evidence_guard ok=False msg=网页未抓到可用正文，且本地知识库相关性不足（top_score=0.000），本轮不输出无依据结论
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 4 ---
+question=清华大学图书馆开放时间是什么？
+status=200 elapsed=13.59s
+mode=web strategy=rag_then_web kb_score=0.0
+answer_preview=## 结论  清华大学图书馆的常规开放时间为 **周一至周日 8:00–22:00**，其中部分区域（如西407、409）开放时间为 **8:00–12:00、13:00–17:00**，读者服务费用结算处开放时间为 **8:00–17:00**，美术学院大楼A区域开放时间为 **9:00–17:00**。此外，图书馆主页、馆藏目录查询系统和自助还书服务为 **24小时开放**。  ## 核验与补充  本次回答主要依据网页核验证据，因为知识库未命中相关内容。网页来源包括清华大学图书馆的官方通知和开馆时间页面，具体补充如下：  - **常规开放时间**：根
+step=kb_retrieve ok=False msg=问题不属于北理域，已跳过本地知识库，直接进入网页检索
+step=web_search ok=True msg=已启动全网搜索：清华大学图书馆开放时间是什么？
+step=web_search ok=True msg=duckduckgo 提取到 6 个候选网址
+step=web_search ok=True msg=候选网页已足够，提前结束后续搜索（6 个）
+step=web_search ok=True msg=全网搜索获得 6 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 3 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 556 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 830 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 4254 字符
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 5 ---
+question=北京理工大学图书馆开放时间是什么？
+status=200 elapsed=84.32s
+mode=web strategy=rag_then_web kb_score=0.7735762596130371
+answer_preview=## 结论 北京理工大学图书馆的开放时间未在提供的知识库和网页证据中明确给出。知识库仅介绍了图书馆的功能（如借阅、座位预约、数据库检索等），网页证据中北京大学图书馆的内容与北京理工大学无关，而北京理工大学图书馆的网页（海淀公共文化服务数字平台）仅提供了历史沿革和馆舍面积等基本信息，未包含开放时间。  ## 核验与补充 - **知识库证据**：未包含开放时间信息，仅涉及图书馆服务项目（如座位预约、借阅规则等）。 - **网页核验证据**：   - 北京大学图书馆网页（`lib.pku.edu.cn`）与北京理工大学无关，无法作为有效参考。   - 北京理工
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.774）
+step=web_search ok=True msg=已启动全网搜索：北京理工大学图书馆开放时间是什么？
+step=web_search ok=True msg=duckduckgo 提取到 6 个候选网址
+step=web_search ok=True msg=候选网页已足够，提前结束后续搜索（6 个）
+step=web_search ok=True msg=全网搜索获得 6 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 3 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=application/pdf
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2207 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=False msg=robots.txt 不允许抓取
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 446 字符
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答

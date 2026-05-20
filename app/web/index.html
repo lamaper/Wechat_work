@@ -4,199 +4,103 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>北理新生助手</title>
-  <style>
-    :root {
-      --bg-1: #f7fafc;
-      --bg-2: #e9f2ff;
-      --card: #ffffff;
-      --ink: #12253d;
-      --muted: #566f8e;
-      --brand: #0f5ccf;
-      --brand-2: #2785ff;
-      --line: #d7e4f6;
-      --shadow: 0 16px 36px rgba(15, 92, 207, 0.16);
-      --radius: 18px;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 12% 10%, rgba(46, 110, 255, 0.22), transparent 34%),
-        radial-gradient(circle at 86% 82%, rgba(54, 169, 255, 0.16), transparent 36%),
-        linear-gradient(160deg, var(--bg-1), var(--bg-2));
-      display: grid;
-      place-items: center;
-      padding: 20px;
-    }
-
-    .wrap {
-      width: min(980px, 100%);
-      display: grid;
-      gap: 18px;
-    }
-
-    .hero {
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: var(--shadow);
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-size: 30px;
-      letter-spacing: 0.5px;
-    }
-
-    .hero p {
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 15px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      position: relative;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: var(--shadow);
-      display: grid;
-      gap: 12px;
-      overflow: hidden;
-    }
-
-    .card::after {
-      content: "";
-      position: absolute;
-      right: -60px;
-      top: -60px;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(39, 133, 255, 0.25), rgba(39, 133, 255, 0));
-    }
-
-    .badge {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-weight: 800;
-      background: linear-gradient(120deg, var(--brand), var(--brand-2));
-      box-shadow: 0 8px 20px rgba(39, 133, 255, 0.28);
-    }
-
-    .card h2 {
-      margin: 2px 0 0;
-      font-size: 24px;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.65;
-      min-height: 54px;
-    }
-
-    .action {
-      margin-top: 2px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      border-radius: 12px;
-      min-height: 44px;
-      padding: 0 16px;
-      font-weight: 700;
-      color: #fff;
-      background: linear-gradient(120deg, var(--brand), var(--brand-2));
-      width: fit-content;
-    }
-
-    .tip {
-      font-size: 13px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .authbar {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .auth-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 760px) {
-      .grid { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 24px; }
-    }
-  </style>
+  <link rel="stylesheet" href="/theme.css" />
 </head>
 <body>
   <main class="wrap">
-    <section class="hero">
+    <section class="hero page-hero">
       <div class="authbar">
         <span>当前登录: <strong id="me">加载中</strong></span>
         <div class="auth-actions">
-          <a class="action" href="/logout" style="min-height:36px;padding:0 14px;">退出登录</a>
+          <a class="action compact-action" href="/logout">退出登录</a>
         </div>
       </div>
-      <h1>北理新生助手</h1>
-      <p>请选择需要使用的功能页面，支持地点查询、智能问答与人工工单服务。</p>
+      <div class="hero-layout">
+        <div class="hero-copy-block">
+          <p class="eyebrow">校园服务入口</p>
+          <h1>北理新生助手</h1>
+          <p>把校园地图、智能问答和人工工单收进同一个入口里，适合新生在报到、找路、查通知和补充求助之间快速切换。</p>
+          <div class="hero-actions">
+            <a class="action" href="/chat">立即提问</a>
+            <a class="btn secondary" href="/place">校园找路</a>
+          </div>
+        </div>
+        <div class="hero-meta-grid">
+          <article class="hero-meta">
+            <span class="metric-label">当前覆盖</span>
+            <strong>3 个高频服务</strong>
+            <p>地点检索、问题问答、人工工单统一接入。</p>
+          </article>
+        </div>
+      </div>
     </section>
 
-    <section class="grid">
-      <article class="card">
+    <section class="grid home-grid">
+      <article class="card feature-card">
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l-5 2V6l5-2 6 2 5-2v14l-5 2-6-2z" />
+            <path d="M9 4v14" />
+            <path d="M15 6v14" />
+          </svg>
+        </span>
         <div class="badge">01</div>
+        <p class="eyebrow">PLACE</p>
         <h2>地点查询</h2>
-        <p>输入地点关键词，查看地图定位、地址信息与坐标。</p>
+        <p>输入地点关键词，查看地图定位、地址、候选结果和静态预览。</p>
+        <ul class="feature-list">
+          <li>支持校园常用地点快捷搜索</li>
+          <li>支持候选地点切换与坐标复制</li>
+          <li>适合找教学楼、宿舍和周边交通点</li>
+        </ul>
         <a class="action" href="/place">进入地点查询</a>
       </article>
 
-      <article class="card">
+      <article class="card feature-card">
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H5l-2 2V11.5A8.5 8.5 0 1 1 21 11.5z" />
+            <path d="M8 10h8" />
+            <path d="M8 14h5" />
+          </svg>
+        </span>
         <div class="badge">02</div>
+        <p class="eyebrow">ASK</p>
         <h2>智能问答</h2>
-        <p>围绕报到、选课、住宿、校园网等问题进行咨询。</p>
+        <p>围绕报到、选课、住宿、校园网等问题进行咨询，必要时自动补充网页检索。</p>
+        <ul class="feature-list">
+          <li>保留最终回答和引用链接</li>
+          <li>适合快速确认通知与流程</li>
+          <li>可先问政策，再决定是否提交工单</li>
+        </ul>
         <a class="action" href="/chat">进入智能问答</a>
       </article>
 
-      <article class="card">
+      <article class="card feature-card">
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 3h8l4 4v13a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+            <path d="M15 3v5h5" />
+            <path d="M9 12h6" />
+            <path d="M9 16h6" />
+          </svg>
+        </span>
         <div class="badge">03</div>
+        <p class="eyebrow">TICKET</p>
         <h2>人工工单</h2>
-        <p>提交问题后可在“我的问题”主动拉取进度，支持学长处理台答复。</p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <p>提交问题后可主动刷新进度，适合需要人工补充解释或个性化建议的场景。</p>
+        <ul class="feature-list">
+          <li>支持当前账号下的问题追踪</li>
+          <li>保留问题编号和查询码</li>
+          <li>学长处理台按权限开放</li>
+        </ul>
+        <div class="action-group">
           <a class="action" href="/freshman">我的问题</a>
           <a class="action" href="/senior">学长处理台</a>
         </div>
       </article>
     </section>
 
-    <div class="tip">建议将此页面配置为公众号菜单入口。</div>
   </main>
   <script>
     (async function loadMe() {

@@ -1,0 +1,48 @@
+--- CASE 1 ---
+question=北京理工大学图书馆开放时间是什么？
+status=200 elapsed=17.55s
+mode=web kb_score=0.7735762596130371
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.774）
+step=web_search ok=True msg=已启动全网搜索：北京理工大学图书馆开放时间是什么？
+step=web_search ok=True msg=duckduckgo 提取到 6 个候选网址
+step=web_search ok=True msg=候选网页已足够，提前结束后续搜索（6 个）
+step=web_search ok=True msg=全网搜索获得 6 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 3 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=False msg=HTTPSConnectionPool(host='www.bit.edu.cn', port=443): Max retries exceeded with url: /tzgg17/jyjx/a23022.htm (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=application/pdf
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html;charset=UTF-8
+step=extract ok=True msg=提取正文成功，长度 130 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2207 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html;charset=utf-8
+step=extract ok=True msg=提取正文成功，长度 2448 字符
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 2 ---
+question=北京大学在哪里？
+status=200 elapsed=16.59s
+mode=web kb_score=0.0
+step=kb_retrieve ok=False msg=问题不属于北理域，已跳过本地知识库，直接进入网页检索
+step=web_search ok=True msg=已启动全网搜索：北京大学在哪里？
+step=web_search ok=True msg=duckduckgo 提取到 2 个候选网址
+step=web_search ok=True msg=so360 提取到 0 个候选网址
+step=web_search ok=False msg=baidu 搜索请求失败: HTTPSConnectionPool(host='m.baidu.com', port=443): Max retries exceeded with url: /s?word=%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=web_search ok=True msg=全网搜索获得 2 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 2 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=False msg=HTTPSConnectionPool(host='www.pku.edu.cn', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2476 字符
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答

@@ -4,289 +4,706 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>地点查询</title>
-  <!-- Tencent Map JS API key must be injected at build/deploy time and restricted to approved domains in Tencent Map console. -->
-  <script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=__TENCENT_MAP_KEY__"></script>
-  <style>
-    :root {
-      --bg-1: #f4f7fb;
-      --bg-2: #dbe9ff;
-      --card: #ffffff;
-      --text: #10233f;
-      --muted: #48617f;
-      --brand: #0a7cff;
-      --brand-2: #06b6d4;
-      --danger: #d93025;
-      --shadow: 0 12px 30px rgba(10, 30, 60, 0.12);
-      --radius: 16px;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      color: var(--text);
-      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 15% 10%, rgba(10, 124, 255, 0.2), transparent 35%),
-        radial-gradient(circle at 85% 20%, rgba(6, 182, 212, 0.2), transparent 35%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2));
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .app {
-      width: min(1100px, 100%);
-      display: grid;
-      gap: 14px;
-      grid-template-rows: auto auto 1fr;
-    }
-
-    .toolbar {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(6px);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-    }
-
-    .search-box {
-      display: flex;
-      gap: 8px;
-    }
-
-    input[type="text"] {
-      flex: 1;
-      border: 1px solid #d6e0ef;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 16px;
-      outline: none;
-    }
-
-    input[type="text"]:focus {
-      border-color: var(--brand);
-      box-shadow: 0 0 0 3px rgba(10, 124, 255, 0.15);
-    }
-
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      color: #fff;
-      background: linear-gradient(120deg, var(--brand), var(--brand-2));
-      transition: transform 0.15s ease;
-    }
-
-    button:active { transform: scale(0.98); }
-
-    .hint {
-      color: var(--muted);
-      font-size: 13px;
-      align-self: center;
-    }
-
-    .status {
-      min-height: 20px;
-      color: var(--muted);
-      font-size: 14px;
-      padding: 0 2px;
-    }
-
-    .status.error { color: var(--danger); }
-
-    .content {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 14px;
-      min-height: 460px;
-    }
-
-    #map {
-      width: 100%;
-      min-height: 460px;
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      background: #e9f1ff;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      display: grid;
-      grid-template-rows: auto auto auto 1fr;
-      gap: 8px;
-    }
-
-    .card h2 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-      margin: 0;
-    }
-
-    .preview {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 12px;
-      background: #edf3ff;
-      border: 1px solid #e0e8f6;
-    }
-
-    @media (max-width: 900px) {
-      .content { grid-template-columns: 1fr; }
-      #map { min-height: 360px; }
-      .toolbar { grid-template-columns: 1fr; }
-      .search-box { flex-wrap: wrap; }
-      .search-box button { width: 100%; }
-    }
-  </style>
+  <link rel="stylesheet" href="/theme.css" />
 </head>
 <body>
-  <main class="app">
-    <section class="toolbar">
-      <div class="search-box">
-        <input id="keywordInput" type="text" placeholder="输入地点关键词，例如：北京理工大学、中关村地铁站" />
-        <button id="searchBtn" type="button">查询地点</button>
+  <main class="app place-app">
+    <section class="hero page-hero">
+      <div class="authbar">
+        <h1>地点查询</h1>
+        <div class="auth-actions">
+          <a class="btn secondary" href="/">返回首页</a>
+          <a class="btn secondary" href="/chat">智能问答</a>
+          <a class="btn secondary" href="/logout">退出登录</a>
+        </div>
       </div>
-      <div class="hint">请先填入腾讯地图 Key（__TENCENT_MAP_KEY__）后即可使用地点查询。</div>
+      <p>输入地点关键词，或直接点击校园常用地点进行查询。</p>
+    </section>
+
+    <section class="toolbar map-toolbar">
+      <div class="search-box">
+        <div class="search-combo">
+          <input id="keywordInput" type="text" placeholder="输入地点关键词，例如：北京理工大学、中关村地铁站" />
+          <button id="searchBtn" class="search-submit" type="button">查询地点</button>
+        </div>
+        <button id="clearBtn" class="link-pill search-ghost" type="button">清空结果</button>
+      </div>
+      <section class="quick-section">
+        <div class="section-row">
+          <span class="hint">校园快捷地点</span>
+        </div>
+        <div id="quickPlaces" class="quick-grid"></div>
+      </section>
+      <section class="quick-section">
+        <div class="section-row">
+          <span class="hint">最近搜索</span>
+          <button id="clearHistoryBtn" class="link-pill" type="button">清空历史</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+      <div id="mapHint" class="hint">可从校园常用地点或最近搜索中快速开始。</div>
     </section>
 
     <div id="status" class="status"></div>
 
-    <section class="content">
-      <div id="map"></div>
-      <article class="card">
-        <h2 id="placeName">尚未查询</h2>
-        <p id="placeAddress" class="muted">输入地点后，将显示名称、地址和静态预览图。</p>
-        <p id="placePosition" class="muted">坐标：-</p>
-        <img id="placeImage" class="preview" alt="地点图片预览" />
+    <section class="content place-content">
+      <div class="map-shell">
+        <div id="map"></div>
+      </div>
+      <article class="card map-side">
+        <div class="panel-head">
+          <div>
+            <h2 id="placeName">尚未查询</h2>
+            <p id="placeAddress" class="muted">输入关键词后显示名称、地址和候选结果。</p>
+          </div>
+          <span id="resultCount" class="count">0 个候选</span>
+        </div>
+        <div class="detail-list">
+          <div class="detail-row">
+            <span class="detail-key">坐标</span>
+            <span id="placePosition" class="detail-value">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">当前状态</span>
+            <span id="placeState" class="detail-value">等待查询</span>
+          </div>
+        </div>
+        <div class="detail-actions">
+          <button id="copyCoordsBtn" class="btn secondary" type="button">复制坐标</button>
+          <button id="copyAddressBtn" class="btn secondary" type="button">复制地址</button>
+          <a id="openMapLink" class="action" href="https://map.qq.com" target="_blank" rel="noopener noreferrer">打开腾讯地图</a>
+        </div>
+        <div class="preview-shell">
+          <img id="placeImage" class="preview" alt="地点图片预览" />
+        </div>
+        <section class="candidate-shell">
+          <div class="panel-head">
+            <h3>候选地点</h3>
+            <span class="panel-tag">可切换查看</span>
+          </div>
+          <div id="resultList" class="result-list"></div>
+        </section>
       </article>
     </section>
   </main>
 
   <script>
+    const HISTORY_KEY = 'bit_place_search_history_v1';
+    const QUICK_PLACES = [
+      '北京理工大学中关村校区',
+      '北京理工大学良乡校区',
+      '北京大学',
+      '清华大学',
+      '北京理工大学图书馆',
+      '北京理工大学校医院',
+      '良乡大学城地铁站',
+      '魏公村地铁站'
+    ];
+    const LOCAL_POIS = [
+      {
+        title: '北京理工大学中关村校区',
+        address: '北京市海淀区中关村南大街 5 号',
+        aliases: ['北理工中关村', '中关村校区', 'bit 中关村', '北京理工大学', '北理工'],
+        location: { lat: 39.95886, lng: 116.31662 },
+        ad_info: { district: '海淀区' },
+        source: '本地地点库'
+      },
+      {
+        title: '北京理工大学良乡校区',
+        address: '北京市房山区良乡东路 9 号',
+        aliases: ['北理工良乡', '良乡校区', 'bit 良乡'],
+        location: { lat: 39.73004, lng: 116.13236 },
+        ad_info: { district: '房山区' },
+        source: '本地地点库'
+      },
+      {
+        title: '北京理工大学图书馆',
+        address: '北京市海淀区中关村南大街 5 号北京理工大学中关村校区内',
+        aliases: ['图书馆', '北理工图书馆'],
+        location: { lat: 39.96025, lng: 116.31614 },
+        ad_info: { district: '海淀区' },
+        source: '本地地点库'
+      },
+      {
+        title: '北京理工大学校医院',
+        address: '北京市海淀区中关村南大街 5 号北京理工大学中关村校区内',
+        aliases: ['校医院', '北理工医院'],
+        location: { lat: 39.95968, lng: 116.31528 },
+        ad_info: { district: '海淀区' },
+        source: '本地地点库'
+      },
+      {
+        title: '北京理工大学体育馆',
+        address: '北京市海淀区中关村南大街 5 号北京理工大学中关村校区内',
+        aliases: ['体育馆', '北理工体育馆'],
+        location: { lat: 39.96111, lng: 116.31817 },
+        ad_info: { district: '海淀区' },
+        source: '本地地点库'
+      },
+      {
+        title: '北京理工大学中心教学楼',
+        address: '北京市海淀区中关村南大街 5 号北京理工大学中关村校区内',
+        aliases: ['中心教学楼', '中心楼'],
+        location: { lat: 39.95992, lng: 116.31728 },
+        ad_info: { district: '海淀区' },
+        source: '本地地点库'
+      },
+      {
+        title: '良乡大学城地铁站',
+        address: '北京市房山区地铁房山线良乡大学城站',
+        aliases: ['良乡大学城站', '良乡大学城地铁'],
+        location: { lat: 39.72356, lng: 116.13982 },
+        ad_info: { district: '房山区' },
+        source: '本地地点库'
+      },
+      {
+        title: '魏公村地铁站',
+        address: '北京市海淀区中关村南大街魏公村地铁站',
+        aliases: ['魏公村站', '魏公村地铁'],
+        location: { lat: 39.95741, lng: 116.32308 },
+        ad_info: { district: '海淀区' },
+        source: '本地地点库'
+      },
+      {
+        title: '北京大学',
+        address: '北京市海淀区颐和园路 5 号',
+        aliases: ['北大', '北京大学东门', '北京大学西门'],
+        location: { lat: 39.99282, lng: 116.30578 },
+        ad_info: { district: '海淀区' },
+        source: '本地地点库'
+      },
+      {
+        title: '清华大学',
+        address: '北京市海淀区双清路 30 号',
+        aliases: ['清华', '清华大学东门', '清华大学西门'],
+        location: { lat: 40.00306, lng: 116.32691 },
+        ad_info: { district: '海淀区' },
+        source: '本地地点库'
+      },
+      {
+        title: '中国人民大学',
+        address: '北京市海淀区中关村大街 59 号',
+        aliases: ['人大', '中国人民大学东门'],
+        location: { lat: 39.96812, lng: 116.31731 },
+        ad_info: { district: '海淀区' },
+        source: '本地地点库'
+      },
+      {
+        title: '国家图书馆',
+        address: '北京市海淀区中关村南大街 33 号',
+        aliases: ['国图', '中国国家图书馆'],
+        location: { lat: 39.94937, lng: 116.32549 },
+        ad_info: { district: '海淀区' },
+        source: '本地地点库'
+      }
+    ];
+
     const statusEl = document.getElementById('status');
     const inputEl = document.getElementById('keywordInput');
     const searchBtn = document.getElementById('searchBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    const quickPlacesEl = document.getElementById('quickPlaces');
+    const historyListEl = document.getElementById('historyList');
+    const resultListEl = document.getElementById('resultList');
+    const resultCountEl = document.getElementById('resultCount');
+    const placeStateEl = document.getElementById('placeState');
+    const copyCoordsBtn = document.getElementById('copyCoordsBtn');
+    const copyAddressBtn = document.getElementById('copyAddressBtn');
+    const openMapLinkEl = document.getElementById('openMapLink');
+    const mapHintEl = document.getElementById('mapHint');
 
     const placeNameEl = document.getElementById('placeName');
     const placeAddressEl = document.getElementById('placeAddress');
     const placePositionEl = document.getElementById('placePosition');
     const placeImageEl = document.getElementById('placeImage');
+    const mapEl = document.getElementById('map');
+    const mapShellEl = document.querySelector('.map-shell');
+    const detailListEl = document.querySelector('.detail-list');
+    const detailActionsEl = document.querySelector('.detail-actions');
+    const mapSideEl = document.querySelector('.map-side');
 
-    const MAP_KEY = '__TENCENT_MAP_KEY__';
-    const initialCenter = new TMap.LatLng(39.9042, 116.4074);
-    const map = new TMap.Map('map', {
-      center: initialCenter,
-      zoom: 12,
-      viewMode: '2D'
-    });
+    const MAP_KEY = 'EQMBZ-X4SCZ-SS2XO-ZYI62-Y2RVE-PNFWB';
+    let map = null;
+    let markerLayer = null;
+    let latestResults = [];
+    let activeResultIndex = -1;
 
-    let markerLayer = new TMap.MultiMarker({
-      map,
-      geometries: []
-    });
+    function escapeHtml(text) {
+      return String(text || '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+
+    function buildPreviewPlaceholder(label) {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+          <defs>
+            <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#eef2ef" />
+              <stop offset="100%" stop-color="#e6ddd4" />
+            </linearGradient>
+          </defs>
+          <rect width="600" height="400" rx="36" fill="url(#bg)" />
+          <circle cx="120" cy="96" r="56" fill="#d9e0da" />
+          <circle cx="500" cy="320" r="70" fill="#ddd2c6" />
+          <text x="48" y="210" fill="#7f9186" font-family="Noto Sans SC, Microsoft YaHei, sans-serif" font-size="18" letter-spacing="4">校园地点预览</text>
+          <text x="48" y="252" fill="#5f5953" font-family="Noto Serif SC, SimSun, serif" font-size="34">${escapeHtml(label || '地点图片预览')}</text>
+        </svg>`;
+      return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    }
+
+    function normalizeKeyword(text) {
+      return String(text || '').toLowerCase().replace(/\s+/g, '');
+    }
+
+    function searchLocalPois(keyword) {
+      const query = normalizeKeyword(keyword);
+      if (!query) {
+        return [];
+      }
+
+      return LOCAL_POIS
+        .map((item) => {
+          const title = normalizeKeyword(item.title);
+          const address = normalizeKeyword(item.address);
+          const aliases = (item.aliases || []).map(normalizeKeyword);
+          let score = 0;
+          if (title.includes(query)) score += 5;
+          if (address.includes(query)) score += 2;
+          if (aliases.some((alias) => alias.includes(query) || query.includes(alias))) score += 4;
+          return { item, score };
+        })
+        .filter((entry) => entry.score > 0)
+        .sort((left, right) => right.score - left.score)
+        .slice(0, 5)
+        .map((entry) => entry.item);
+    }
+
+    function hasValidMapKey() {
+      return MAP_KEY && !MAP_KEY.includes('__TENCENT_MAP_KEY__');
+    }
+
+    function resetResultList(message = '输入关键词后，这里会列出可切换的地点。') {
+      resultCountEl.textContent = '0 个候选';
+      resultListEl.innerHTML = `
+        <div class="empty-state result-empty">
+          <p class="empty-kicker">候选地点</p>
+          <h3>可切换的地点会显示在这里</h3>
+          <p>${escapeHtml(message)}</p>
+        </div>
+      `;
+    }
+
+    function resetPlaceDetails(reason = '等待查询') {
+      latestResults = [];
+      activeResultIndex = -1;
+      placeNameEl.textContent = '尚未查询';
+      placeAddressEl.textContent = '输入关键词后，这里会显示名称、地址和推荐地点。';
+      placePositionEl.textContent = '-';
+      placeStateEl.textContent = reason;
+      placeImageEl.src = buildPreviewPlaceholder('地点图片预览');
+      openMapLinkEl.href = 'https://map.qq.com';
+      copyCoordsBtn.disabled = true;
+      copyAddressBtn.disabled = true;
+      detailListEl.hidden = true;
+      detailActionsEl.hidden = true;
+      mapSideEl.classList.remove('has-result');
+      mapShellEl.classList.remove('has-result');
+      resetResultList();
+    }
+
+    function setSearchEmptyState(reason, detailMessage, keyword = '') {
+      latestResults = [];
+      activeResultIndex = -1;
+      placeNameEl.textContent = '暂未找到相关地点';
+      placeAddressEl.textContent = detailMessage || '请换一个更具体的关键词再试。';
+      placePositionEl.textContent = '-';
+      placeStateEl.textContent = reason;
+      placeImageEl.src = buildPreviewPlaceholder('暂未找到相关地点');
+      openMapLinkEl.href = keyword ? `https://map.qq.com/search/${encodeURIComponent(keyword)}` : 'https://map.qq.com';
+      copyCoordsBtn.disabled = true;
+      copyAddressBtn.disabled = true;
+      detailListEl.hidden = true;
+      detailActionsEl.hidden = true;
+      mapSideEl.classList.remove('has-result');
+      mapShellEl.classList.remove('has-result');
+      if (markerLayer) {
+        markerLayer.setGeometries([]);
+      }
+    }
+
+    function loadHistory() {
+      try {
+        const raw = localStorage.getItem(HISTORY_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (err) {
+        return [];
+      }
+    }
+
+    function renderHistory(items = loadHistory()) {
+      if (!items.length) {
+        historyListEl.innerHTML = '';
+        return;
+      }
+      historyListEl.innerHTML = items.map((item) => `<button class="history-chip" type="button" data-keyword="${escapeHtml(item)}">${escapeHtml(item)}</button>`).join('');
+    }
+
+    function saveHistory(keyword) {
+      const normalized = String(keyword || '').trim();
+      if (!normalized) return;
+      const items = [normalized, ...loadHistory().filter((item) => item !== normalized)].slice(0, 8);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
+      renderHistory(items);
+    }
+
+    function renderQuickPlaces() {
+      quickPlacesEl.innerHTML = QUICK_PLACES.map((item) => `<button class="quick-chip" type="button" data-keyword="${escapeHtml(item)}">${escapeHtml(item)}</button>`).join('');
+    }
+
+    function renderMapUnavailable() {
+      mapEl.innerHTML = `
+        <div class="empty-state map-empty">
+          <p class="empty-kicker">地点服务</p>
+          <h3>当前暂时无法显示地图</h3>
+          <p>搜索表单和结果面板仍可使用，地图预览会在服务恢复后自动回到正常状态。</p>
+        </div>
+      `;
+      placeNameEl.textContent = '地图暂时不可用';
+      placeAddressEl.textContent = '你仍然可以输入关键词查看地点名称、地址和候选结果。';
+      placePositionEl.textContent = '-';
+      placeStateEl.textContent = '等待地图服务恢复';
+      placeImageEl.src = buildPreviewPlaceholder('地图暂时不可用');
+      openMapLinkEl.href = 'https://map.qq.com';
+      copyCoordsBtn.disabled = true;
+      copyAddressBtn.disabled = true;
+      detailListEl.hidden = true;
+      detailActionsEl.hidden = true;
+      mapSideEl.classList.remove('has-result');
+      mapShellEl.classList.remove('has-result');
+      resetResultList('当前暂时无法展示地图，请稍后重试。');
+      mapHintEl.textContent = '地图服务暂时不可用，可先查看候选结果。';
+      setStatus('地图服务暂时不可用，请稍后再试。', true);
+    }
+
+    function loadTencentMapScript() {
+      if (window.TMap) {
+        return Promise.resolve();
+      }
+
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.charset = 'utf-8';
+        script.src = `https://map.qq.com/api/gljs?v=1.exp&key=${encodeURIComponent(MAP_KEY)}`;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('腾讯地图脚本加载失败'));
+        document.head.appendChild(script);
+      });
+    }
+
+    async function ensureMapReady() {
+      if (!hasValidMapKey()) {
+        renderMapUnavailable();
+        return false;
+      }
+
+      if (map && markerLayer && window.TMap) {
+        return true;
+      }
+
+      await loadTencentMapScript();
+      const initialCenter = new TMap.LatLng(39.9042, 116.4074);
+      map = new TMap.Map('map', {
+        center: initialCenter,
+        zoom: 12,
+        viewMode: '2D'
+      });
+
+      markerLayer = new TMap.MultiMarker({
+        map,
+        geometries: []
+      });
+      mapHintEl.textContent = '地图已就绪，可切换候选地点并查看地址与坐标。';
+      return true;
+    }
 
     function setStatus(text, isError = false) {
       statusEl.textContent = text;
       statusEl.className = isError ? 'status error' : 'status';
     }
 
-    function searchPlace(keyword) {
-      const callbackName = `handleSearchResult_${Date.now()}`;
-      const script = document.createElement('script');
-
-      const url = `https://apis.map.qq.com/ws/place/v1/search?keyword=${encodeURIComponent(keyword)}&boundary=region(中国,0)&key=${MAP_KEY}&output=jsonp&callback=${callbackName}`;
-
-      window[callbackName] = function (res) {
-        document.body.removeChild(script);
-        delete window[callbackName];
-
-        if (res.status !== 0) {
-          if (res.status === 121) {
-            setStatus('地图 Key 当日调用量已达上限，请次日重试或更换 Key。', true);
-          } else if (res.status === 311) {
-            setStatus('地图 Key 无效或服务未开通，请检查腾讯位置服务控制台配置。', true);
-          } else {
-            setStatus(`地图查询失败（状态码 ${res.status}）：${res.message || '未知错误'}`, true);
-          }
-          return;
-        }
-
-        if (!res.data || res.data.length === 0) {
-          setStatus('未找到匹配地点，请更换关键词。', true);
-          return;
-        }
-
-        const place = res.data[0];
-        const { lat, lng } = place.location;
-
-        map.setCenter(new TMap.LatLng(lat, lng));
-        map.setZoom(15);
-
-        markerLayer.setGeometries([
-          {
-            id: 'selected_place',
-            position: new TMap.LatLng(lat, lng)
-          }
-        ]);
-
-        placeNameEl.textContent = place.title || '未知地点';
-        placeAddressEl.textContent = place.address || '暂无详细地址';
-        placePositionEl.textContent = `坐标：${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-
-        placeImageEl.src = `https://apis.map.qq.com/ws/staticmap/v2/?center=${lat},${lng}&zoom=15&size=600*400&markers=size:large|color:0x0A7CFF|label:A|${lat},${lng}&key=${MAP_KEY}`;
-
-        setStatus('查询成功，已更新地图与地点信息。');
-      };
-
-      script.onerror = function () {
-        setStatus('查询失败，请检查网络或 API Key。', true);
-      };
-
-      script.src = url;
-      document.body.appendChild(script);
+    function buildExternalMapLink(place) {
+      const keyword = encodeURIComponent(place.title || place.address || '北京理工大学');
+      return `https://map.qq.com/search/${keyword}`;
     }
 
-    function triggerSearch() {
-      if (MAP_KEY.includes('__TENCENT_MAP_KEY__')) {
-        setStatus('请先在代码中替换 __TENCENT_MAP_KEY__ 为你的腾讯地图 Key。', true);
+    function setPreviewFallback(place) {
+      const label = place && place.location
+        ? `${place.title || '地点'} · ${place.location.lat.toFixed(4)}, ${place.location.lng.toFixed(4)}`
+        : '地点图片预览';
+      placeImageEl.src = buildPreviewPlaceholder(label);
+    }
+
+    function updatePreview(place) {
+      const { lat, lng } = place.location;
+      placeImageEl.onerror = () => {
+        placeImageEl.onerror = null;
+        setPreviewFallback(place);
+        mapHintEl.textContent = '地图已就绪。若预览加载失败，页面会自动切回本地预览。';
+      };
+      placeImageEl.src = `https://apis.map.qq.com/ws/staticmap/v2/?center=${lat},${lng}&zoom=15&size=600*400&markers=size:large|color:0x7F9186|label:A|${lat},${lng}&key=${MAP_KEY}`;
+    }
+
+    function renderResultList() {
+      if (!latestResults.length) {
+        resetResultList();
         return;
       }
-      const keyword = inputEl.value.trim();
+
+      resultCountEl.textContent = `${latestResults.length} 个候选`;
+      resultListEl.innerHTML = latestResults.map((place, index) => {
+        const district = place.ad_info && place.ad_info.district ? place.ad_info.district : '无区县信息';
+        const activeClass = index === activeResultIndex ? ' is-active' : '';
+        return `
+          <button class="result-item${activeClass}" type="button" data-index="${index}">
+            <span class="result-item-title">${escapeHtml(place.title || '未知地点')}</span>
+            <span class="result-item-meta">${escapeHtml(place.address || '暂无详细地址')}</span>
+            <span class="result-item-meta">${escapeHtml(district)}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function mergeResults(localResults, remoteResults) {
+      const merged = [];
+      const seen = new Set();
+      for (const place of [...localResults, ...remoteResults]) {
+        if (!place || !place.location) {
+          continue;
+        }
+        const normalizeForDedupe = (value) => String(value || '')
+          .replace(/\s+/g, '')
+          .replace(/[()（）·-]/g, '')
+          .toLowerCase();
+        const normalizedTitle = normalizeForDedupe(place.title);
+        const normalizedAddress = normalizeForDedupe(place.address);
+        const key = [
+          normalizedTitle,
+          normalizedAddress
+        ].filter(Boolean).join('|') || [
+          normalizedTitle,
+          normalizedAddress,
+          Number(place.location.lat || 0).toFixed(6),
+          Number(place.location.lng || 0).toFixed(6)
+        ].join('|');
+        if (seen.has(key)) {
+          continue;
+        }
+        seen.add(key);
+        merged.push(place);
+      }
+      return merged.slice(0, 5);
+    }
+
+    async function fetchRemoteResults(keyword) {
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 8000);
+      try {
+        const res = await fetch(`/api/place_search?q=${encodeURIComponent(keyword)}`, {
+          signal: controller.signal,
+          headers: { 'Accept': 'application/json' }
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || '地图查询失败');
+        }
+        return data;
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
+    }
+
+    function applyPlace(place, index, keyword, sourceLabel = '') {
+      const { lat, lng } = place.location;
+      activeResultIndex = index;
+      map.setCenter(new TMap.LatLng(lat, lng));
+      map.setZoom(16);
+      markerLayer.setGeometries([
+        {
+          id: 'selected_place',
+          position: new TMap.LatLng(lat, lng)
+        }
+      ]);
+
+      placeNameEl.textContent = place.title || '未知地点';
+      placeAddressEl.textContent = place.address || '暂无详细地址';
+      placePositionEl.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+      placeStateEl.textContent = keyword
+        ? `已为你定位到“${keyword}”的第 ${index + 1} 个结果${sourceLabel ? ` · ${sourceLabel}` : ''}`
+        : `已定位到第 ${index + 1} 个结果${sourceLabel ? ` · ${sourceLabel}` : ''}`;
+      openMapLinkEl.href = buildExternalMapLink(place);
+      copyCoordsBtn.disabled = false;
+      copyAddressBtn.disabled = false;
+      detailListEl.hidden = false;
+      detailActionsEl.hidden = false;
+      mapSideEl.classList.add('has-result');
+      mapShellEl.classList.add('has-result');
+      updatePreview(place);
+      renderResultList();
+    }
+
+    function applySearchResults(results, keyword, sourceLabel) {
+      latestResults = results.slice(0, 5);
+      saveHistory(keyword);
+      applyPlace(latestResults[0], 0, keyword, sourceLabel);
+      setStatus(`查询成功，已找到 ${latestResults.length} 个相关地点。`);
+    }
+
+    async function copyText(text, successMessage) {
+      if (!text) {
+        setStatus('当前没有可复制的信息。', true);
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        setStatus(successMessage);
+      } catch (err) {
+        setStatus('复制失败，请手动选择内容。', true);
+      }
+    }
+
+    async function searchPlace(keyword) {
+      const ready = await ensureMapReady();
+      if (!ready) {
+        return;
+      }
+
+      const localResults = searchLocalPois(keyword);
+      try {
+        const remotePayload = await fetchRemoteResults(keyword);
+        const remoteResults = Array.isArray(remotePayload.items) ? remotePayload.items : [];
+        const mergedResults = mergeResults(localResults, remoteResults);
+
+        if (mergedResults.length) {
+          latestResults = mergedResults;
+          saveHistory(keyword);
+          const sourceLabel = localResults.length && remoteResults.length
+            ? '已优先整理校园与周边相关地点'
+            : localResults.length
+              ? '已优先显示校园常用地点'
+              : '已补充周边相关地点';
+          applyPlace(mergedResults[0], 0, keyword, sourceLabel);
+          setStatus(`查询成功，已找到 ${mergedResults.length} 个相关地点。`);
+          mapHintEl.textContent = remoteResults.length
+            ? '已为你整理校内与周边相关地点，可继续切换查看。'
+            : '已优先显示校园常用地点，可继续切换查看。';
+          return;
+        }
+
+        setSearchEmptyState('暂未找到相关地点', '没有找到匹配结果，请换一个更具体的地点名称。', keyword);
+        resetResultList('没有找到匹配结果，请换一个更具体的地点名称。');
+        setStatus(remotePayload.error || '暂未找到相关地点，请换一个关键词再试。', true);
+      } catch (err) {
+        if (localResults.length) {
+          applySearchResults(localResults, keyword, '已切换到校园常用地点');
+          mapHintEl.textContent = '网络暂时波动，已先为你展示校园常用地点。';
+          return;
+        }
+        setSearchEmptyState('网络异常', '查询请求失败，请稍后重试。', keyword);
+        resetResultList('查询请求失败，请稍后重试。');
+        setStatus('查询失败，请稍后重试。', true);
+      }
+    }
+
+    async function triggerSearch(keywordOverride = '') {
+      if (!hasValidMapKey()) {
+        renderMapUnavailable();
+        return;
+      }
+      const keyword = String(keywordOverride || inputEl.value || '').trim();
       if (!keyword) {
         setStatus('请先输入地点关键词。', true);
         return;
       }
+      inputEl.value = keyword;
       setStatus('正在查询，请稍候...');
-      searchPlace(keyword);
+      try {
+        await searchPlace(keyword);
+      } catch (err) {
+        setStatus('地图初始化失败，请检查网络或 API Key。', true);
+      }
     }
 
-    searchBtn.addEventListener('click', triggerSearch);
+    searchBtn.addEventListener('click', () => triggerSearch());
     inputEl.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         triggerSearch();
       }
     });
 
-    placeImageEl.src = 'https://via.placeholder.com/600x400?text=%E5%9C%B0%E7%82%B9%E5%9B%BE%E7%89%87%E9%A2%84%E8%A7%88';
+    clearBtn.addEventListener('click', () => {
+      inputEl.value = '';
+      setStatus('已清空当前查询结果。');
+      resetPlaceDetails();
+      if (map && markerLayer) {
+        markerLayer.setGeometries([]);
+      }
+    });
+
+    clearHistoryBtn.addEventListener('click', () => {
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory([]);
+      setStatus('已清空最近搜索记录。');
+    });
+
+    quickPlacesEl.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      const keyword = target.getAttribute('data-keyword');
+      if (!keyword) return;
+      triggerSearch(keyword);
+    });
+
+    historyListEl.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      const keyword = target.getAttribute('data-keyword');
+      if (!keyword) return;
+      triggerSearch(keyword);
+    });
+
+    resultListEl.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      const item = target.closest('[data-index]');
+      if (!(item instanceof HTMLElement)) return;
+      const index = Number(item.getAttribute('data-index'));
+      if (!Number.isFinite(index) || !latestResults[index]) return;
+      applyPlace(latestResults[index], index, inputEl.value.trim());
+      setStatus(`已切换到第 ${index + 1} 个候选地点。`);
+    });
+
+    copyCoordsBtn.addEventListener('click', () => copyText(placePositionEl.textContent, '坐标已复制。'));
+    copyAddressBtn.addEventListener('click', () => copyText(placeAddressEl.textContent, '地址已复制。'));
+
+    if (hasValidMapKey()) {
+      renderQuickPlaces();
+      renderHistory();
+      resetPlaceDetails('等待查询');
+      ensureMapReady().catch(() => {
+        setStatus('地图初始化失败，请检查网络或 API Key。', true);
+      });
+    } else {
+      renderQuickPlaces();
+      renderHistory();
+      renderMapUnavailable();
+    }
   </script>
 </body>
 </html>

@@ -5,8 +5,9 @@ from modules.ai.service import (
     LLM_API_KEY,
     LLM_BASE_URL,
     ask_llm,
+    build_official_site_answer,
     build_chat_response,
-    retrieve_from_faq,
+    retrieve_knowledge_bundle,
 )
 from modules.ai.kb import build_index
 
@@ -48,10 +49,16 @@ def register_ai_routes(app) -> None:
         if not question:
             return jsonify({"error": "q is required"}), 400
 
-        retrieved, top_score = retrieve_from_faq(question)
+        kb_bundle = retrieve_knowledge_bundle(question)
+        retrieved = kb_bundle.get("reference_text") or ""
+        top_score = float(kb_bundle.get("top_score") or 0.0)
+        kb_results = kb_bundle.get("results") or []
+        kb_backend = kb_bundle.get("backend", "none")
 
         answer = ""
-        if LLM_BASE_URL and LLM_API_KEY:
+        if kb_backend == "official_site_catalog" and kb_results:
+            answer = build_official_site_answer(kb_results)
+        elif LLM_BASE_URL and LLM_API_KEY:
             answer = ask_llm(question, retrieved, top_score)
 
         return jsonify(

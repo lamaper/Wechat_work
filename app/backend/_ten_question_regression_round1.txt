@@ -1,0 +1,93 @@
+--- CASE 1 ---
+question=哪个食堂好吃啊？
+status=200 elapsed=2.33s mode=kb kb_score=0.7264656337896984
+answer_preview=根据现有参考知识，无法直接确定“哪个食堂最好吃”，因为口味评价非常主观，且各食堂的菜品和窗口会轮换。不过，可以提供一些参考信息帮助你探索：  - **中关村校区**：**新食堂**（靠近宿舍区，窗口品类多，人气最高）和**京工风味食堂**（菜品偏家常和北方口味）常被提及。**延园餐厅**环境较好，适合改善伙食。 - **良乡校区**：有多个食堂分布在生活区和教学区附近，规模和品类逐渐完善。  建议你入学后逐一体验，找到最适合自己口味的食堂。  ### 来源 - 03_校园生活与住宿网络.md (score:0.726) - 03_校园生活与住宿网络.md (score:0.627)
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.726）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 2 ---
+question=报到当天我应该先干啥，流程会不会很乱？
+status=200 elapsed=3.82s mode=kb kb_score=0.7911255955696106
+answer_preview=报到当天流程通常比较清晰，不会很乱，学校会安排志愿者引导。建议按以下顺序进行：  1. **确认报到地点和时间**      最可靠的方式是查看迎新网（https://hi.bit.edu.cn/）和学院当年的正式通知，不要依赖往年信息或同学口述。  2. **本人到场报到**      一般要求本人到场，特殊情况需提前联系学院办理请假或延期手续，否则可能影响学籍注册。  3. **领取校园卡**      报到当天由学院统一发放，或在指定发卡点凭录取通知书和身份证领取。领取后核对卡面信息（姓名、学号、照片）并现场刷卡确认。  4. **寻求志愿者帮助**      报到日会有大量学生志愿者（穿统一服装或佩戴工作证）在校门口、报到点、宿舍楼等处提供引导和行李搬运，有疑问随时咨询。  5. **关于宿舍和体检**      - 宿舍分配通常已确定，当天一般不支持调换。如有特殊情况（如健康原因），先向辅导员说明。      - 入学
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.791）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 3 ---
+question=统一身份认证密码忘了怎么找回？
+status=200 elapsed=2.47s mode=kb kb_score=0.9527031720234798
+answer_preview=统一身份认证密码忘记后，可以通过以下两种方式找回：  ### 自助找回（推荐） 1. 访问统一身份认证登录页面：[https://sso.bit.edu.cn/](https://sso.bit.edu.cn/) 2. 点击“忘记密码”或“找回密码” 3. 根据提示，通过**绑定的手机号**接收短信验证码，或通过**绑定的密保邮箱**接收重置链接 4. 按照指引设置新密码  > **建议**：首次登录后立即绑定手机号和密保邮箱，避免后续遗忘密码时无法自助找回。  ### 人工办理（自助方式无效时） - 携带**本人学生证或身份证**，前往**信息化服务大厅**现场办理密码重置 - 信息化服务大厅位置及联系方式查询：[https://itc.bit.edu.cn/](https://itc.bit.edu.cn/)  ### 来源 - 13_校园卡与生活支付.md (score:0.953) - 16_信息化服务与软件资源.md 
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.953）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 4 ---
+question=校园网一直弹认证页面，先查哪几项？
+status=200 elapsed=3.03s mode=kb kb_score=0.789063052059424
+answer_preview=好的，新生同学！校园网一直弹认证页面，通常是因为认证状态失效或网络环境异常。建议按以下顺序排查：  1.  **检查账号状态**：确认你的统一身份认证账号（学号）和密码是否有效，可尝试登录统一认证入口（https://sso.bit.edu.cn/）验证。 2.  **检查终端时间同步**：确保电脑或手机的系统时间与北京时间一致，时间偏差可能导致认证失败。 3.  **清除浏览器缓存**：清除浏览器缓存和Cookie，避免旧页面干扰认证跳转。 4.  **手动访问认证页面**：如果浏览器未自动跳转，可手动访问认证门户地址（具体地址请通过迎新指引或信息化服务网站获取）。 5.  **检查认证有效期**：校园网认证有效期一般为24小时或更长，到期后需重新登录。如果频繁弹出，可能是认证已过期。  如果以上步骤均无效，建议联系学校信息化服务部门获取进一步帮助。  ### 来源 - 16_信息化服务与软件资源.md (score:0.78
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.789）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 5 ---
+question=我在校外，怎么进图书馆数据库查知网？
+status=200 elapsed=2.75s mode=kb kb_score=0.7691767781452201
+answer_preview=根据参考知识，您在校外访问图书馆数据库（如知网）需要通过学校的 **WebVPN** 服务。具体步骤如下：  1. **访问 WebVPN 入口**：打开浏览器，进入 https://webvpn.bit.edu.cn/。 2. **登录**：使用您的统一身份认证账号（即校园网账号）登录。 3. **访问数据库**：在 WebVPN 页面内，选择或搜索“中国知网（CNKI）”等数据库链接，即可直接访问并检索、下载文献。  **注意**：校外直接访问图书馆数据库（如知网）通常无法成功，必须通过 VPN 或 WebVPN 才能使用校内 IP 权限。  ### 来源 - `02_学习与教务服务.md` (score:0.743) - `19_官方网址与办事入口.md` (score:0.686) - `03_校园生活与住宿网络.md` (score:0.669)
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.769）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 6 ---
+question=周末想从良乡去中关村办事，地铁和校车一般怎么选？
+status=200 elapsed=3.04s mode=kb kb_score=0.7371239960193634
+answer_preview=根据现有参考知识，**无法确定**良乡校区到中关村校区的校车信息，但地铁路线有明确说明。  ### 地铁出行建议 - **路线**：从良乡校区出发，可乘坐房山线至市区，再换乘其他线路前往中关村校区。具体换乘方案建议参考地铁线路图或手机地图APP实时规划。 - **参考站点**：良乡校区附近有“良乡大学城站”或“良乡大学城北站”；中关村校区附近有“魏公村站”、“人民大学站”或“苏州街站”。  ### 校车信息 参考知识中**未提及**良乡与中关村校区之间的校车服务，因此无法提供校车选择建议。建议你通过以下官方渠道查证： - 北京理工大学迎新网（https://hi.bit.edu.cn/） - 学校后勤或交通管理部门公告  ### 来源 - 05_交通出行与校区导航.md (score:0.737) - 05_交通出行与校区导航.md (score:0.734) - 05_交通出行与校区导航.md (score:0.689) - 
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.737）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 7 ---
+question=军训要带啥才不容易崩？
+status=200 elapsed=5.08s mode=kb kb_score=0.7200091815392176
+answer_preview=军训期间想“不崩”，核心是做好**防护、补给和舒适度**准备。根据参考知识，建议你重点带好以下物品：  ### 1. 防晒与防暑装备 - **高倍数防晒霜**：出门前30分钟涂抹，训练间隙**重点补涂脖子后侧和耳朵**（极易被忽视）。 - **大容量水杯**：随身携带，**少量多次**补充水分（不要等口渴再喝），可加少量盐或运动饮料补充电解质。 - **防暑药品**：如藿香正气水等（参考知识未明确列出，但建议备上）。  ### 2. 脚部与衣物护理 - **厚实柔软的运动鞋垫**：提前准备，能极大缓解站军姿、正步的脚底压力。 - **干爽袜子**：每天更换，避免脚汗引发水泡或真菌感染。 - **纯棉吸汗T恤**：穿在军训服内打底，每天换洗，防止痱子、毛囊炎等皮肤问题。  ### 3. 饮食与作息保障 - **早餐必须吃**：空腹训练极易低血糖头晕甚至昏倒。 - **保证充足睡眠**：体力消耗大，睡眠不足会严重影响情绪和体能。  
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.720）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 8 ---
+question=绿色通道和助学金我这种家里比较紧张的情况先办哪个？
+status=200 elapsed=34.89s mode=web kb_score=0.0
+answer_preview=## 结论  建议您**优先办理“绿色通道”**，再根据后续情况申请助学金。两者并不冲突，但“绿色通道”是入学时的应急保障，能确保您顺利报到注册；助学金则是在入学后通过评审获得的经济支持。  ## 核验与补充  根据本次抓取的网页信息，可以明确以下几点：  1. **“绿色通道”是入学时的紧急通道**：网页（来源：江南大学资助中心）明确提到“新生入学‘绿色通道’工作”，其核心功能是帮助家庭经济困难学生**缓交学费、住宿费**，先办理入学手续，避免因暂时无法缴费而影响报到。这是入学第一道保障。  2. **助学贷款是后续经济支持**：网页（来源：中国石油大学（北京）资助中心）详细说明了国家助学贷款（生源地或校园地）的申请流程，贷款金额可用于支付学费、住宿费及弥补生活费，但需在入学后或暑假期间办理，**不能替代“绿色通道”的即时缓交功能**。  3. **两者可衔接，不冲突**：网页（来源：教育部）介绍了国家资助政策体系，其中“绿色
+step=kb_retrieve ok=False msg=问题不属于北理域，已跳过本地知识库，直接进入网页检索
+step=web_search ok=True msg=已启动全网搜索：绿色通道和助学金我这种家里比较紧张的情况先办哪个？
+step=web_search ok=True msg=duckduckgo 提取到 7 个候选网址
+step=web_search ok=True msg=候选网页已足够，提前结束后续搜索（7 个）
+step=web_search ok=True msg=全网搜索获得 6 个候选网页
+step=web_search ok=True msg=准备抓取候选网页，目标获取 3 个有效结果
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=False msg=正文过短，仅 31 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2945 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=False msg=HTTPSConnectionPool(host='www.nimt.edu.cn', port=443): Max retries exceeded with url: /xueshengchu/2025/0820/c189a52660/page.htm (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1017)')))
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2802 字符
+step=public_web ok=True msg=公网网页校验通过
+step=robots ok=True msg=robots.txt 允许抓取
+step=request ok=True msg=HTTP 200，Content-Type=text/html
+step=extract ok=True msg=提取正文成功，长度 2305 字符
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 9 ---
+question=想申请缓考，流程大概咋走？
+status=200 elapsed=2.43s mode=kb kb_score=0.7518360614776611
+answer_preview=缓考申请流程如下：  1. **准备材料**：缓考申请表（从教务系统或学院领取）+ 医院诊断证明或其他有效佐证材料。 2. **提交时间**：考前提交；若突发疾病，可在考后 **1-3 个工作日**内提交。 3. **审批流程**：提交材料 → 任课教师签署意见 → 学院教学秘书审核 → 教务部门备案。 4. **重要提醒**：突发疾病务必在考后**最短时间内**联系学院教学秘书说明情况，不能等病好了才补手续。未经审批擅自缺考按“旷考”处理（成绩记零分，通常不给补考机会）。  缓考一般与补考同时段进行，但成绩按正常分数记载（无上限），与补考不同。  ### 来源 - bit_freshman_rag_handbook.md (score:0.752) - 14_考试与学籍管理规定.md (score:0.696) - faq.md (score:0.675)
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.752）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
+--- CASE 10 ---
+question=大一想搞机器人/科创，社团和实验室一般怎么选比较稳？
+status=200 elapsed=5.50s mode=kb kb_score=0.7742186784744263
+answer_preview=根据现有参考知识，关于“大一想搞机器人/科创，社团和实验室怎么选比较稳”的问题，可以给出以下建议，但请注意部分细节（如具体社团选择）参考知识未覆盖，需自行查证。  ### 核心建议：优先实验室，社团作为补充  1.  **实验室是更直接、更深入的科研/科创路径**     -   参考知识明确提到，大一进入实验室是可行的，且目标应是“了解科研的基本过程”和“学习实验技能和仪器操作”（来源:17_创新创业与科研实践.md, score:0.657）。     -   进入实验室的途径包括：主动联系导师、申报大创项目、参加学院开放日等（来源:bit_freshman_rag_handbook.md, score:0.657）。     -   **注意**：进入实验室前必须完成安全培训并通过考核，否则不得进入（来源:07_校园安全与反诈指南.md, score:0.774）。  2.  **社团可作为兴趣探索和技能补充**     
+step=kb_retrieve ok=True msg=本地知识库已完成混合检索（backend=hybrid, results=8, top_score=0.774）
+step=web_search ok=True msg=当前问题属于校内稳定信息，知识库证据已足够，本轮跳过网页核验以提升响应速度
+step=answer ok=True msg=已完成 RAG 检索、网页核验与汇总回答
